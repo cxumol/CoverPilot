@@ -1,5 +1,6 @@
 from taskAI import TaskAI
-from data_test import mock_jd, mock_cv
+from taskNonAI import compile_pdf
+from data_test import mock_jd, mock_cv, pdf_context
 from config_secret import api_test
 
 from llama_index.llms.openai_like import OpenAILike
@@ -27,6 +28,11 @@ def test_taskAI():
     for chunk in gen:
         print(chunk)
 
+def test_typst_pdf():
+    compile_pdf(tmpl_path='template_letter.tmpl',context=pdf_context)
+    os
+
 if __name__ == "__main__":
-    test_taskAI()
+    # test_taskAI()
     # integration()
+    test_typst_pdf()

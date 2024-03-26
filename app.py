@@ -4,7 +4,7 @@ from config import STRONG_API_BASE, STRONG_API_KEY, STRONG_MODEL
 from util import is_valid_url
 from util import mylogger
 from util import stream_together
-from taskNonAI import extract_url, file_to_html
+from taskNonAI import extract_url, file_to_html, compile_pdf
 from taskAI import TaskAI
 ## load data
 from data_test import mock_jd, mock_cv
@@ -14,7 +14,7 @@ import gradio as gr
 from pypandoc.pandoc_download import download_pandoc
 ## std
 import os
-
+import json
 
 logger = mylogger(__name__,'%(asctime)s:%(levelname)s:%(message)s')
 info = logger.info
@@ -88,6 +88,11 @@ def finalize_letter_txt(api_base, api_key, api_model, debug_CoT, jd, cv):
     )
     for result in gen:
         yield result
+
+def finalize_letter_pdf(meta_data, cover_letter_text):
+    pdf_context = json.loads(meta_data)
+    pdf_context["letter_body"] = cover_letter_text
+    return compile_pdf(pdf_context,tmpl_path="template_letter.tmpl",output_path=f"/tmp/cover_letter_{pdf_context['applicant_full_name']}_to_{pdf_context['company_full_name']}.pdf")
 
 with gr.Blocks(
     title=DEMO_TITLE,
@@ -175,11 +180,11 @@ with gr.Blocks(
     ).then(fn=run_compose, inputs=[strong_base, strong_key, strong_model, min_jd, min_cv], outputs=[debug_CoT]                      
     ).then(fn=lambda:gr.Accordion("Expert Zone", open=False),inputs=None, outputs=[expert_zone]
     ).then(fn=finalize_letter_txt, inputs=[cheap_base, cheap_key, cheap_model, debug_CoT, jd_info, cv_text], outputs=[cover_letter_text, debug_jobapp]
-    )
+    ).then(fn=finalize_letter_pdf, inputs=[debug_jobapp, cover_letter_text], outputs=[cover_letter_pdf])
 
 
 if __name__ == "__main__":
     init()
-    app.queue(max_size=10, default_concurrency_limit=1).launch(
+    app.queue(max_size=1, default_concurrency_limit=1).launch(
         show_error=True, debug=True, share=IS_SHARE
     )

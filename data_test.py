@@ -65,3 +65,11 @@ References
 
 Available upon request.
 """
+pdf_context = {
+  "company_full_name": "Mastercard",
+  "job_title": "Project Management Intern",
+  "applicant_full_name": "Dorothy Gale",
+  "applicant_contact_information": "123 Main St., Emerald City, KS 12345, (123) 456-7890, dorothy@wizardofoz.com",
+  "letter_body": "text,\n\ntest test"
+}
+

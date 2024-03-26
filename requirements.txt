@@ -1,6 +1,7 @@
 # UI
 gradio>=4.0,<=5.0
 # external tool
+typst
 pypandoc
 shot-scraper
 # LLM related
