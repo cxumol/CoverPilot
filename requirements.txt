@@ -1,0 +1,12 @@
+# UI
+gradio>=4.0,<=5.0
+# external tool
+pypandoc
+shot-scraper
+# LLM related
+llama-index-llms-openai-like
+tiktoken
+# lib
+requests
+# dev tools
+ruff
