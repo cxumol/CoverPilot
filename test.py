@@ -28,5 +28,5 @@ def test_taskAI():
         print(chunk)
 
 if __name__ == "__main__":
-    
+    test_taskAI()
     # integration()

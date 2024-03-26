@@ -2,12 +2,13 @@ import tiktoken
 
 from urllib.parse import urlparse
 import requests
-
 import logging
+
+from typing import Generator
 
 def mylogger(name, format, level=logging.INFO):
     # Create a custom logger
-    logger = logging.getLogger("custom_logger")
+    logger = logging.getLogger(name)
     logger.setLevel(level)
     # Configure the custom logger with the desired settings
     formatter = logging.Formatter(format)
@@ -42,3 +43,22 @@ def is_valid_openai_api_key(api_base:str, api_key: str)->bool:
 
 def zip_api(api_base:str, api_key:str, model:str)->dict[str, str]:
     return {"base": api_base, "key": api_key, "model": model}
+
+def stream_together(*gens: Generator):
+    ln=len(gens)
+    result = [""] * ln # Mind type here
+    while 1:
+        stop: bool = True
+        for i in range(ln):
+            try:
+                n=next(gens[i])
+                if "delta" in dir(n):
+                    n=n.delta
+                result[i] += n
+                stop = False
+            except StopIteration:
+                # info(f"gen[{i}] exhausted")
+                pass
+        yield result
+        if stop:
+            break

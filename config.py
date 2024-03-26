@@ -5,7 +5,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY") or ""
 
 CHEAP_API_BASE = os.getenv("CHEAP_API_BASE") or OPENAI_API_BASE
 CHEAP_API_KEY = os.getenv("CHEAP_API_KEY") or OPENAI_API_KEY
-CHEAP_MODEL = os.getenv("CHEAP_MODEL") or "gpt-3.5-turbo"
+CHEAP_MODEL = os.getenv("CHEAP_MODEL") or "gpt-4"
 
 STRONG_API_BASE = os.getenv("STRONG_API_BASE") or OPENAI_API_BASE
 STRONG_API_KEY = os.getenv("STRONG_API_KEY") or OPENAI_API_KEY
