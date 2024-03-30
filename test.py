@@ -29,8 +29,8 @@ def test_taskAI():
         print(chunk)
 
 def test_typst_pdf():
-    compile_pdf(tmpl_path='template_letter.tmpl',context=pdf_context)
-    os
+    compile_pdf(tmpl_path='template_letter.tmpl',context=pdf_context, output_path='test_result.pdf')
+    # os
 
 if __name__ == "__main__":
     # test_taskAI()

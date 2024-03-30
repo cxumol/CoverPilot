@@ -56,7 +56,11 @@
 
   // Add body and name.
   body
-  // v(1.25cm)
-  image("Signature.png", height: 7%, fit: "stretch")
+  v(0.25cm)
+  // image("Signature.png", height: 7%, fit: "stretch")
+  linebreak()
+  text(font: "Testimonia",size:3em)[#name]
+  linebreak()
+  v(0.2cm)
   name
 }

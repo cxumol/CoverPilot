@@ -8,6 +8,7 @@ from typing import Optional
 from string import Template
 
 from datetime import datetime
+from pathlib import Path
 
 
 def file_to_html(file_path: str) -> str:
@@ -55,6 +56,6 @@ def compile_pdf(context: dict, tmpl_path: str, output_path="/tmp/cover_letter.pd
     letter_typ = tmpl.safe_substitute(context)
     with open('letter.typ', 'w', encoding='utf8') as f:
         f.write(letter_typ)
-    typst.compile('letter.typ', output=output_path)
+    typst.compile('letter.typ', output_path, font_paths=[Path('./fonts/')])
     os.remove('letter.typ')
     return output_path
