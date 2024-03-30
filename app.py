@@ -162,7 +162,7 @@ with gr.Blocks(
 
     + `Model ID`: 
         - **CheapAI**: 
-            + `gpt-3.5-turbo` any variant should be fine if OpenAI won't make them lazier and dumber.  
+            + `gpt-3.5-turbo` any variant should be fine unless OpenAI make them lazier and dumber.  
             + `Mistral-7B-Instruct-v0.1` works well
             + `gemma-7b-it` usually can't understand instructions properly and cause error.
         - **StrongAI**: 
