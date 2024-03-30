@@ -9,7 +9,7 @@ CHEAP_MODEL = os.getenv("CHEAP_MODEL") or "gpt-3.5-turbo"
 
 STRONG_API_BASE = os.getenv("STRONG_API_BASE") or OPENAI_API_BASE
 STRONG_API_KEY = os.getenv("STRONG_API_KEY") or OPENAI_API_KEY
-STRONG_MODEL = os.getenv("STRONG_MODEL") or "gpt-4"
+STRONG_MODEL = os.getenv("STRONG_MODEL") or "gpt-4-0125-preview"
 
 IS_SHARE = bool(os.getenv("IS_SHARE")) or False
 IS_DEBUG = bool(os.getenv("IS_DEBUG")) or False

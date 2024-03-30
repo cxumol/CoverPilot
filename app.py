@@ -150,16 +150,35 @@ with gr.Blocks(
 ) as app:
     intro = f"""# {DEMO_TITLE}
     > You provide job description and résumé, and I write Cover letter for you!  
-    Before you use, please fisrt setup API for 2 AI agents': **CheapAI** and StrongAI.
+    
     """
     gr.Markdown(intro)
-    with gr.Accordion("User Guide", open=False):
+    with gr.Accordion("READ ME FIRST", open=False):
         guide = gr.Markdown("""## Setup
-    `API Key`: If you have no idea, go to https://beta.openai.com/account/api-keys  
 
-    `Model ID` to choose: 
-    - **CheapAI**: `gpt-3.5-turbo-*` should be fine if OpenAI won't make them lazier and dumber.  `Mistral-7B-Instruct-v0.1` works well, but `gemma-7b-it` doesn't, because gemma can't understand instructions properly in this case.
-    - **StrongAI**: Models with small context window size like won't work, such as `gpt-3.5-turbo-0613` or perhaps `gpt-4-0613`. `Mistral-7B-Instruct-v0.1` can do the job.
+    > Expand "AI Setup" panel and setup API for 2 AI agents, **CheapAI** and **StrongAI**, before you start.
+
+    + `API Key`: If you have no idea, go to https://beta.openai.com/account/api-keys  
+
+    + `Model ID`: 
+        - **CheapAI**: 
+            + `gpt-3.5-turbo-*` should be fine if OpenAI won't make them lazier and dumber.  
+            + `Mistral-7B-Instruct-v0.1` works well
+            + `gemma-7b-it` usually can't understand instructions properly and cause error.
+        - **StrongAI**: 
+            +`Mistral-7B-Instruct-v0.1` can do the job.
+            + Models with small context window size like won't work, such as
+                - `gpt-3.5-turbo-0613`
+                -  perhaps `gpt-4-0613`
+    
+    Model choice can be a interesting topic involing quite a few experiments. Feel free to try any other models you like!
+
+    ## Troubleshooting
+    - If your API is on localhost / local network, you may need to run this app on local network too.
+    - If your API is on some AI service platform, review if you have enough balance / credits / quota on the platform.
+    - If you are sure that you have set up the API correctly, but encounter an error along the way, try click the "Go!" button again.
+    - Try change AI provider / model
+    - Report to GitHub issue if you believe it's a bug.
 """)
     with gr.Row():
         with gr.Column(scale=1):
@@ -239,6 +258,8 @@ with gr.Blocks(
             strong_model,
         ],
         outputs=[strong_base, strong_key, strong_model],
+    ).then(
+        fn=lambda: gr.Accordion("AI setup (OpenAI-compatible LLM API)", open=True), inputs=None, outputs=[setup_zone]
     )
 
     infer_btn.click(
