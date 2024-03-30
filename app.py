@@ -166,7 +166,7 @@ with gr.Blocks(
             + `Mistral-7B-Instruct-v0.1` works well
             + `gemma-7b-it` usually can't understand instructions properly and cause error.
         - **StrongAI**: 
-            +`Mistral-7B-Instruct-v0.1` can do the job.
+            + `Mistral-7B-Instruct-v0.1` can do the job.
             + Models with small context window size like won't work, such as
                 - `gpt-3.5-turbo-0613`
                 -  perhaps `gpt-4-0613`
