@@ -26,44 +26,49 @@ Additional Desired Qualities:
 Please send your resume and cover letter to [email address] to apply. We look forward to meeting you and learning more about your passion for playing cards and your ability to bring joy to our guests.
 """
 mock_cv = """
-Dorothy Gale
+Sherlock Holmes
 
-123 Main St., Emerald City, KS 12345, (123) 456-7890, dorothy@wizardofoz.com
+ 221B Baker Street, London, +44 (020) 1234-5678, sherlock.holmes@sherlockHolmes.com
 
-Summary
+Summary:
+Highly analytical and observant professional with a proven track record of solving complex problems and providing strategic insights. Skilled in data analysis, surveillance, and forensic investigation. Adept at working under pressure and delivering results in fast-paced environments.
 
-Highly motivated and resourceful individual with a strong work ethic and a positive attitude. Proven ability to manage multiple tasks effectively and work independently. Skilled in a variety of industries, including retail, hospitality, and education.
+Education:
+    Bachelor of Science in Physics, University of Cambridge
+    Diploma in Criminal Investigation, Metropolitan Police Academy
 
-Skills
+Experience:
 
-    Strong communication and interpersonal skills
-    Excellent organizational and time management skills
-    Proficiency in Microsoft Office Suite
-    Strong customer service orientation
-    Ability to work independently and as part of a team
-    Creativity and problem-solving abilities
+Consulting Detective, Self-Employed (2010-Present)
+    Provide consulting services to law enforcement agencies, corporations, and private individuals to solve complex crimes, fraud cases, and other investigations.
+    Utilize advanced data analysis techniques, surveillance technology, and forensic evidence to gather and interpret evidence.
+    Develop and present detailed reports and recommendations to clients, outlining findings and proposed courses of action.
+    Notable cases include:
+        Theft of a priceless artifact from the British Museum (2011)
+        Murder of a prominent businessman in London (2012)
+        Fraud investigation for a major financial institution (2015)
+        Kidnapping of a high-profile celebrity (2018)
 
-Experience
+Research Scientist, MI5 (2005-2010)
+    Conducted research and analysis on various national security threats, including terrorism, cybercrime, and organized crime.
+    Developed and implemented data analysis tools and techniques to identify and track suspicious activity.
+    Collaborated with law enforcement agencies and other stakeholders to develop and execute investigative strategies.
+    Presented findings and recommendations to senior leadership and policymakers.
 
-Teacher Emerald City Elementary School, Emerald City, KS 2000-2006
+Skills:
+    Data analysis and visualization
+    Surveillance and counter-surveillance
+    Forensic investigation
+    Criminal investigation
+    Strategic planning and decision-making
+    Communication and presentation
 
-    Provided a safe and engaging learning environment for students
-    Developed and implemented lesson plans that aligned with curriculum standards
-    Mentored and guided other teachers
+Certifications:
+    Certified Fraud Examiner (CFE)
+    Certified Information Systems Security Professional (CISSP)
 
-Retail Sales Associate The Ruby Slipper Shop, Emerald City, KS 1998-2000
-
-    Provided excellent customer service to clients
-    Managed inventory and maintained store displays
-    Achieved high sales goals
-
-Education
-
-Bachelor of Arts in Education, University of Kansas Master of Arts in Education, University of Kansas
-
-References
-
-Available upon request.
+Languages:
+    Fluent in English and French
 """
 pdf_context = {
   "companyFullName": "Mastercard",
