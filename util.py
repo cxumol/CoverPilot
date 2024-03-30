@@ -36,16 +36,16 @@ def is_valid_url(url: str) -> bool:
 
 def is_valid_openai_api_key(api_base: str, api_key: str) -> bool:
     headers = {"Authorization": f"Bearer {api_key}"}
-
-    response = requests.get(api_base, headers=headers)
-
+    test_url = f"{api_base}/models"
+    response = requests.get(test_url, headers=headers)
+    print(response.json())
     return response.status_code == 200
 
 
 def checkAPI(api_base: str, api_key: str):
     if not is_valid_openai_api_key(api_base, api_key):
         raise ValueError(
-            "Invalid API key or less possibly OpenAI's (or AI provider's) fault. Did you setup your AI APIs properly? If you don't have any API key, try get one from https://beta.openai.com/account/api-keys"
+            "API not available. Maybe it's OpenAI's (or AI provider's) fault, or you setup your AI APIs icorrectly. If you don't have any API key, try get one from https://beta.openai.com/account/api-keys"
         )
 
 

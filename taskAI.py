@@ -37,7 +37,7 @@ JSON_API = ChatPromptTemplate(
     [
         ChatMessage(
             role="system",
-            content="You are a JSON API. Your mission is to convert user input into a JSON object exactly in this template: {template}",
+            content="You are a JSON API. Your mission is to convert user input into a valid and complete JSON object STRICTLY in this template: {template}. The output should be completely a plain json without nested structure. Never summerize, paraphrase or do anything else, just extract the information from the input and fill in the template.",
         ),
         ChatMessage(role="user", content="{content}"),
     ]
@@ -65,7 +65,8 @@ Before officially write the letter, think step by step. First, list what makes a
 
 ## tasks
 class TaskAI(OpenAILike):
-    def __init__(self, api: dict[str, str], is_debug: bool, **kwargs):
+    is_debug = False
+    def __init__(self, api: dict[str, str], is_debug=False, **kwargs):
         log = logger.info
 
         def guess_window_size(model=api["model"]):
@@ -82,8 +83,8 @@ class TaskAI(OpenAILike):
             log(f"use context window size: {window_size} for {model}")
             return window_size
 
-        checkAPI(api_base, api_key)
-        self.is_debug = is_debug
+        checkAPI(api_base=api["base"], api_key=api["key"])
+        
 
         super().__init__(
             api_base=api["base"],
@@ -93,6 +94,7 @@ class TaskAI(OpenAILike):
             context_window=guess_window_size(),
             **kwargs,
         )
+        self.is_debug = is_debug
 
     def _debug_print_msg(self, msg):
         if not self.is_debug:
@@ -114,7 +116,7 @@ class TaskAI(OpenAILike):
 
     def compose_letter_CoT(self, resume: str, jd: str):
         msg = LETTER_COMPOSE.format_messages(resume=resume, jd=jd)
-        _debug_print_msg(msg)
+        self._debug_print_msg(msg)
         return self.stream_chat(msg)
 
     def get_jobapp_meta(self, JD, CV):
@@ -136,7 +138,8 @@ class TaskAI(OpenAILike):
         try:
             meta_JD = json.loads(meta_JD.strip())
             meta_CV = json.loads(meta_CV.strip())
-        except:
+        except Exception as e:
+            print(e)
             raise ValueError(
                 f"AI didn't return a valid JSON string. Try again or consider a better model for CheapAI. \n{meta_JD}\n{meta_CV}"
             )
@@ -148,7 +151,7 @@ class TaskAI(OpenAILike):
     def purify_letter(self, full_text):
         return self.stream_chat(
             EXTRACT_INFO.format_messages(
-                to_extract="the cover letter section starting from 'Dear Hiring Manager' or similar to 'Sincerely,' or similar ",
+                to_extract="the cover letter section starting from 'Dear Hiring Manager' or similar to 'Sincerely,' or similar",
                 input=full_text,
             )
         )

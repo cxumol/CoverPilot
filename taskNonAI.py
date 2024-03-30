@@ -52,6 +52,12 @@ def _date() -> str:
 def _typst_escape(s) -> str:
     return str(s).replace("@", "\@").replace("#", "\#")
 
+def _ensure_no_signature_in_body(cover_letter_body: str) -> str:
+    if not cover_letter_body.strip().endswith(","):
+        # remove last line
+        cover_letter_body = "\n".join(cover_letter_body.split("\n")[:-1])
+        print(cover_letter_body)
+    return cover_letter_body
 
 def compile_pdf(
     context: dict, tmpl_path: str, output_path="/tmp/cover_letter.pdf", is_debug=False
@@ -62,6 +68,8 @@ def compile_pdf(
         tmpl = Template(f.read())
     context = {k: _typst_escape(v) for k, v in context.items()}
     context.update({"date_string": _date()})
+    context["letter_body"]=_ensure_no_signature_in_body(context["letter_body"])
+
     letter_typ = tmpl.safe_substitute(context)
     with open(letter_src_filepath, "w", encoding="utf8") as f:
         f.write(letter_typ)

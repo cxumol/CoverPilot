@@ -6,6 +6,7 @@ from util import mylogger
 from util import stream_together
 from util import checkAPI
 from taskNonAI import extract_url, file_to_html, compile_pdf
+from taskAI import TaskAI
 
 ## load data
 from _data_test import mock_jd, mock_cv
@@ -32,7 +33,7 @@ def init():
 ## Config Functions
 
 
-def set_same_cheap_strong(set_same: bool, cheap_base, cheap_key):
+def set_same_cheap_strong(set_same: bool, cheap_base, cheap_key, cheap_model):
     # setup_zone = gr.Accordion("AI setup (OpenAI-compatible LLM API)", open=True)
     if set_same:
         return (
@@ -92,9 +93,9 @@ def run_refine(api_base, api_key, api_model, jd_info, cv_text):
         yield result
 
 
-def run_compose(api_base, api_key, api_model, min_jd, min_cv):
+def run_compose(api_base, api_key, api_model, min_jd, min_cv, is_debug):
     strongAPI = {"base": api_base, "key": api_key, "model": api_model}
-    taskAI = TaskAI(strongAPI, temperature=0.6, max_tokens=4000)
+    taskAI = TaskAI(strongAPI, is_debug=is_debug, temperature=0.6, max_tokens=4000)
     info("Composing letter with CoT ...")
     result = ""
     for response in taskAI.compose_letter_CoT(jd=min_jd, resume=min_cv):
@@ -112,7 +113,7 @@ def finalize_letter_txt(api_base, api_key, api_model, debug_CoT):
         yield result
 
 
-def finalize_letter_pdf(api_base, api_key, api_model, jd, cv, cover_letter_text):
+def finalize_letter_pdf(api_base, api_key, api_model, jd, cv, cover_letter_text, is_debug):
     cheapAPI = {"base": api_base, "key": api_key, "model": api_model}
     taskAI = TaskAI(cheapAPI, temperature=0.1, max_tokens=100)
     meta_data = next(taskAI.get_jobapp_meta(JD=jd, CV=cv))
@@ -122,12 +123,13 @@ def finalize_letter_pdf(api_base, api_key, api_model, jd, cv, cover_letter_text)
         pdf_context,
         tmpl_path="typst/template_letter.tmpl",
         output_path=f"/tmp/cover_letter_by_{pdf_context['applicantFullName']}_to_{pdf_context['companyFullName']}.pdf",
+        is_debug=is_debug,
     )
 
 
 with gr.Blocks(
     title=DEMO_TITLE,
-    theme=gr.themes.Soft(primary_hue="blue", secondary_hue="sky", neutral_hue="slate"),
+    theme=gr.themes.Soft(primary_hue="sky", secondary_hue="emerald", neutral_hue="stone"),
 ) as app:
     intro = f"""# {DEMO_TITLE}
     > You provide job description and résumé. I write Cover letter for you!  
@@ -226,7 +228,7 @@ with gr.Blocks(
         outputs=[expert_zone, reformat_zone],
     ).success(
         fn=run_compose,
-        inputs=[strong_base, strong_key, strong_model, min_jd, min_cv],
+        inputs=[strong_base, strong_key, strong_model, min_jd, min_cv, is_debug],
         outputs=[debug_CoT],
     ).success(
         fn=lambda: gr.Accordion("Expert Zone", open=False),
