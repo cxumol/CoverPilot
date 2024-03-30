@@ -5,6 +5,7 @@ from llama_index.core.llms import ChatMessage  # , MessageRole
 from llama_index.core import ChatPromptTemplate
 
 from util import mylogger
+from util import checkAPI
 
 logger = mylogger(__name__, "%(asctime)s:%(filename)s:%(levelname)s:%(message)s")
 ## define templates
@@ -81,6 +82,8 @@ class TaskAI(OpenAILike):
             log(f"use context window size: {window_size} for {model}")
             return window_size
 
+        checkAPI(api_base, api_key)
+        
         super().__init__(
             api_base=api["base"],
             api_key=api["key"],

@@ -4,8 +4,9 @@ from config import STRONG_API_BASE, STRONG_API_KEY, STRONG_MODEL
 from util import is_valid_url
 from util import mylogger
 from util import stream_together
+from util import checkAPI
 from taskNonAI import extract_url, file_to_html, compile_pdf
-from taskAI import TaskAI
+
 ## load data
 from _data_test import mock_jd, mock_cv
 ## ui

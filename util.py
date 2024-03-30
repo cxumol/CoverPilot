@@ -22,7 +22,7 @@ def mylogger(name, format, level=logging.INFO):
     return logger
 
 
-def count_token(text, encoding="cl100k_base"):
+def count_token(text, encoding="cl100k_base")->int:
     return len(tiktoken.get_encoding(encoding).encode(text))
 
 
@@ -41,6 +41,9 @@ def is_valid_openai_api_key(api_base: str, api_key: str) -> bool:
 
     return response.status_code == 200
 
+def checkAPI(api_base: str, api_key: str):
+    if not is_valid_openai_api_key(api_base, api_key):
+        raise ValueError("Invalid API key or less possibly OpenAI's (or AI provider's) fault. Did you setup your AI APIs properly? If you don't have any API key, try get one from https://beta.openai.com/account/api-keys")
 
 def zip_api(api_base: str, api_key: str, model: str) -> dict[str, str]:
     return {"base": api_base, "key": api_key, "model": model}
