@@ -13,7 +13,7 @@ EXTRACT_INFO = ChatPromptTemplate(
     [
         ChatMessage(
             role="system",
-            content="You are a content extractor. You never paraphrase; you only reduce content at the sentence level. Your mission is to extract {to_extract} from user input. Make sure output is complete without missing parts. Output is in a clean text format",
+            content="You are a content extractor. You never paraphrase; you only reduce content at the sentence level. Your mission is to extract {to_extract} from user input. Reformat the extraction in a clean style if extraction looks messey.",
         ),
         ChatMessage(role="user", content="{input}"),
     ]
@@ -35,7 +35,7 @@ JSON_API = ChatPromptTemplate(
     [
         ChatMessage(
             role="system",
-            content="You are an AI JSON API. You convert user input into a JSON object. API returns exactly in this template: {template}",
+            content="You are a JSON API. Your mission is to convert user input into a JSON object exactly in this template: {template}",
         ),
         ChatMessage(role="user", content="{content}"),
     ]
@@ -51,7 +51,7 @@ LETTER_COMPOSE = ChatPromptTemplate(
 
 Before officially write the letter, think step by step. First, list what makes a perfect cover letter in general, and in order to write a perfect cover letter, what key points do you have to learn from the RESUME and JOB_DESCRIPTION. Then, carefully analyze the given RESUME and JOB_DESCRIPTION, take a deep breath and propose 3 best tactics to convince recruiter believe the applicant fit for the role. Ensure your thoughts are express clearly and then write the complete cover letter.""",
         ),
-        ChatMessage(role="user", content="<RESUME>\n{resume}\n</RESUME>\n\n<JOB_DESCRIPTION>\n{jd}</JOB_DESCRIPTION>\n"),
+        ChatMessage(role="user", content="<RESUME>\n{resume}\n</RESUME>\n\n<JOB_DESCRIPTION>\n{jd}</JOB_DESCRIPTION>\n<ANALYSIS_REPORT>"),
     ]
 )
 
@@ -82,7 +82,7 @@ class TaskAI(OpenAILike):
         )
 
     def jd_preprocess(self, input: str):
-        return self.stream_chat(EXTRACT_INFO.format_messages(to_extract="information directly related to job description", input=input))
+        return self.stream_chat(EXTRACT_INFO.format_messages(to_extract="the job description part`", input=input))
 
     def cv_preprocess(self, input: str):
         return self.stream_chat(SIMPLIFY_MD.format_messages(input=input))
@@ -91,9 +91,9 @@ class TaskAI(OpenAILike):
         return self.stream_chat(LETTER_COMPOSE.format_messages(resume=resume, jd=jd))
 
     def get_jobapp_meta(self, JD, CV):
-        meta_JD = self.chat(JSON_API.format_messages(template=keys_to_template(["company_full_name", "job_title"]), content=JD)).message.content
+        meta_JD = self.chat(JSON_API.format_messages(template=keys_to_template(["companyFullName", "jobTitle"]), content=JD)).message.content
         # yield meta_JD
-        meta_CV = self.chat(JSON_API.format_messages(template=keys_to_template(["applicant_full_name", "applicant_contact_information"]), content=CV)).message.content
+        meta_CV = self.chat(JSON_API.format_messages(template=keys_to_template(["applicantFullNname", "applicantContactInformation"]), content=CV)).message.content
         # yield meta_JD+'\n'+meta_CV
         try:
             meta_JD = json.loads(meta_JD.strip())
@@ -106,5 +106,5 @@ class TaskAI(OpenAILike):
         yield json.dumps(meta, indent=2)
 
     def purify_letter(self, full_text):
-        return self.stream_chat(EXTRACT_INFO.format_messages(to_extract="the letter part from greeting to sign-off, and remove applicant's name at end", input=full_text))
+        return self.stream_chat(EXTRACT_INFO.format_messages(to_extract="the cover letter section starting from 'Dear Hiring Manager' or similar to 'Sincerely,' or similar ", input=full_text))
 

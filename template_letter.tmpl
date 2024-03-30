@@ -1,15 +1,15 @@
 #import "template_base.typ": *
 #show: letter.with(
   sender: [
-     ${applicant_contact_information}
+     ${applicantContactInformation}
   ],
   recipient: [
     Hiring Manager \
-    ${company_full_name} \
+    ${companyFullName} \
   ],
   date: [${date_string}],
-  subject: [Cover Letter for ${job_title}],
-  name: [${applicant_full_name}],
+  subject: [Cover Letter for ${jobTitle}],
+  name: [${applicantFullName}],
 )
 
 ${letter_body}

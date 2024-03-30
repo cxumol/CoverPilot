@@ -49,25 +49,26 @@ def run_refine(api_base, api_key, api_model, jd_info, cv_text):
     cheapAPI = {"base": api_base, "key": api_key, "model": api_model}
     taskAI = TaskAI(cheapAPI, temperature=0.2, max_tokens=2048)  # max_tokens=2048
     info("API initialized")
-    gen = (
+    gen = stream_together(
         taskAI.jd_preprocess(input=jd),
         taskAI.cv_preprocess(input=cv),
     )
-    info("tasks initialized")
-    result = [""] * 2
-    while 1:
-        stop: bool = True
-        for i in range(len(gen)):
-            try:
-                result[i] += next(gen[i]).delta
-                stop = False
-            except StopIteration:
-                # info(f"gen[{i}] exhausted")
-                pass
+    # result = [""] * 2
+    # while 1:
+    #     stop: bool = True
+    #     for i in range(len(gen)):
+    #         try:
+    #             result[i] += next(gen[i]).delta
+    #             stop = False
+    #         except StopIteration:
+    #             # info(f"gen[{i}] exhausted")
+    #             pass
+    #     yield result
+    #     if stop:
+    #         info("tasks done")
+    #         break
+    for result in gen:
         yield result
-        if stop:
-            info("tasks done")
-            break
 
 def run_compose(api_base, api_key, api_model, min_jd, min_cv):
     strongAPI = {"base": api_base, "key": api_key, "model": api_model}
@@ -78,28 +79,34 @@ def run_compose(api_base, api_key, api_model, min_jd, min_cv):
         result += response.delta
         yield result
 
-def finalize_letter_txt(api_base, api_key, api_model, debug_CoT, jd, cv):
+def finalize_letter_txt(api_base, api_key, api_model, debug_CoT):
     cheapAPI = {"base": api_base, "key": api_key, "model": api_model}
     taskAI = TaskAI(cheapAPI, temperature=0.2, max_tokens=2048)
     info("Finalizing letter ...")
-    gen = stream_together(
-        taskAI.purify_letter(full_text=debug_CoT),
-        taskAI.get_jobapp_meta(JD=jd, CV=cv),
-    )
-    for result in gen:
+    result=""
+    for response in taskAI.purify_letter(full_text=debug_CoT):
+        result += response.delta
         yield result
+    # gen = stream_together(
+    #     taskAI.purify_letter(full_text=debug_CoT),
+    # )
+    # for result in gen:
+    #     yield result
 
-def finalize_letter_pdf(meta_data, cover_letter_text):
+def finalize_letter_pdf(api_base, api_key, api_model, jd, cv, cover_letter_text):
+    cheapAPI = {"base": api_base, "key": api_key, "model": api_model}
+    taskAI = TaskAI(cheapAPI, temperature=0.1, max_tokens=100)
+    meta_data = next(taskAI.get_jobapp_meta(JD=jd, CV=cv))
     pdf_context = json.loads(meta_data)
     pdf_context["letter_body"] = cover_letter_text
-    return compile_pdf(pdf_context,tmpl_path="template_letter.tmpl",output_path=f"/tmp/cover_letter_{pdf_context['applicant_full_name']}_to_{pdf_context['company_full_name']}.pdf")
+    return meta_data, compile_pdf(pdf_context,tmpl_path="template_letter.tmpl",output_path=f"/tmp/cover_letter_by_{pdf_context['applicantFullName']}_to_{pdf_context['companyFullName']}.pdf")
 
 with gr.Blocks(
     title=DEMO_TITLE,
     theme=gr.themes.Base(primary_hue="blue", secondary_hue="sky", neutral_hue="slate"),
 ) as app:
     intro = f"""# {DEMO_TITLE}
-    > You provide job description and résumé. I write Cover letter for you!
+    > You provide job description and résumé. I write Cover letter for you!  
     Before you use, please fisrt setup API for 2 AI agents': Cheap AI and Strong AI.
     """
     gr.Markdown(intro)
@@ -114,7 +121,7 @@ with gr.Blocks(
                     cheap_base = gr.Textbox(
                         value=CHEAP_API_BASE, label="API BASE"
                     )
-                    cheap_key = gr.Textbox(value=CHEAP_API_KEY, label="API key")
+                    cheap_key = gr.Textbox(value=CHEAP_API_KEY, label="API key", type="password")
                     cheap_model = gr.Textbox(value=CHEAP_MODEL, label="Model ID")
                 gr.Markdown(
                     "---\n**Strong AI**, a thoughtful wordsmith, generates perfect cover letters to make both you and recruiters happy."
@@ -137,17 +144,17 @@ with gr.Blocks(
                 )
             with gr.Group():
                 gr.Markdown("## Applicant - CV / Résumé")
-                with gr.Row():
-                    cv_file = gr.File(
-                        label="Allowed formats: " + " ".join(CV_EXT),
-                        file_count="single",
-                        file_types=CV_EXT,
-                        type="filepath",
-                    )
-                    cv_text = gr.TextArea(
-                        label="Or enter text",
-                        placeholder="If attempting to both upload a file and enter text, only this text will be used.",
-                    )
+            # with gr.Row():
+                cv_file = gr.File(
+                    label="Allowed formats: " + " ".join(CV_EXT),
+                    file_count="single",
+                    file_types=CV_EXT,
+                    type="filepath",
+                )
+                cv_text = gr.TextArea(
+                    label="Or enter text",
+                    placeholder="If attempting to both upload a file and enter text, only this text will be used.",
+                )
         with gr.Column(scale=2):
             gr.Markdown("## Result")
             with gr.Accordion("Reformatting", open=True) as reformat_zone:
@@ -179,8 +186,8 @@ with gr.Blocks(
     ).then(fn=lambda:[gr.Accordion("Expert Zone", open=True),gr.Accordion("Reformatting", open=False)],inputs=None, outputs=[expert_zone, reformat_zone]
     ).then(fn=run_compose, inputs=[strong_base, strong_key, strong_model, min_jd, min_cv], outputs=[debug_CoT]                      
     ).then(fn=lambda:gr.Accordion("Expert Zone", open=False),inputs=None, outputs=[expert_zone]
-    ).then(fn=finalize_letter_txt, inputs=[cheap_base, cheap_key, cheap_model, debug_CoT, jd_info, cv_text], outputs=[cover_letter_text, debug_jobapp]
-    ).then(fn=finalize_letter_pdf, inputs=[debug_jobapp, cover_letter_text], outputs=[cover_letter_pdf])
+    ).then(fn=finalize_letter_txt, inputs=[cheap_base, cheap_key, cheap_model, debug_CoT], outputs=[cover_letter_text]
+    ).then(fn=finalize_letter_pdf, inputs=[cheap_base, cheap_key, cheap_model, jd_info, cv_text, cover_letter_text], outputs=[debug_jobapp, cover_letter_pdf])
 
 
 if __name__ == "__main__":

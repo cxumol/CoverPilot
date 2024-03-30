@@ -18,8 +18,10 @@ def extract_url(url: str) -> Optional[str]:
     cmd = f"""shot-scraper javascript -b firefox \
       "{url}" "
     async () => {{
+      const sleep = duration => new Promise(resolve => setTimeout(() => resolve(), duration));
       const readability = await import('https://cdn.skypack.dev/@mozilla/readability');
-      return (new readability.Readability(document)).parse();
+      await sleep(3000);
+      return new readability.Readability(document).parse();
     }}"
 """
     result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
@@ -43,7 +45,7 @@ def date():
         f"%B %d{'th' if 4 <= current_date.day <= 20 or 24 <= current_date.day <= 30 else ['st', 'nd', 'rd'][current_date.day % 10 - 1]} , %Y")
 
 def typst_escape(s):
-    return s.replace('@','\@').replace('#','\#')
+    return str(s).replace('@','\@').replace('#','\#')
 
 def compile_pdf(context: dict, tmpl_path: str, output_path="/tmp/cover_letter.pdf"):
     with open(tmpl_path, "r", encoding='utf8') as f:
