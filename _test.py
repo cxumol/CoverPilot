@@ -1,13 +1,13 @@
 from taskAI import TaskAI
 from taskNonAI import compile_pdf
-from data_test import mock_jd, mock_cv, pdf_context
-from config_secret import api_test
+from _data_test import mock_jd, mock_cv, pdf_context
+from _secret import api_test
 
 from llama_index.llms.openai_like import OpenAILike
 from llama_index.core.llms import ChatMessage
 
 
-def test_integration():
+def test_ai_integration():
     messages = [
         ChatMessage(role="system", content="You are a helpful assistant"),
         ChatMessage(role="user", content="What is your name"),
@@ -29,10 +29,10 @@ def test_taskAI():
         print(chunk)
 
 def test_typst_pdf():
-    compile_pdf(tmpl_path='template_letter.tmpl',context=pdf_context, output_path='test_result.pdf')
+    compile_pdf(tmpl_path='typst/template_letter.tmpl', context=pdf_context, output_path='test_result.pdf')
     # os
 
 if __name__ == "__main__":
     # test_taskAI()
-    # integration()
+    # test_ai_integration()
     test_typst_pdf()

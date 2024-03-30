@@ -71,10 +71,10 @@ Languages:
     Fluent in English and French
 """
 pdf_context = {
-  "companyFullName": "Mastercard",
-  "jobTitle": "Project Management Intern",
-  "applicantFullName": "Dorothy Gale",
-  "applicantContactInformation": "123 Main St., Emerald City, KS 12345, (123) 456-7890, dorothy@wizardofoz.com",
+  "companyFullName": "Queen of Hearts' Garden",
+  "jobTitle": "Card Guards",
+  "applicantFullName": "Sherlock Holmes",
+  "applicantContactInformation": "221B Baker Street, London, +44 (020) 1234-5678, sherlock.holmes@sherlockHolmes.com",
   "letter_body": "text,\n\ntest test"
 }
 

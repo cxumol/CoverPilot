@@ -7,7 +7,7 @@ from util import stream_together
 from taskNonAI import extract_url, file_to_html, compile_pdf
 from taskAI import TaskAI
 ## load data
-from data_test import mock_jd, mock_cv
+from _data_test import mock_jd, mock_cv
 ## ui
 import gradio as gr
 ## dependency
@@ -53,20 +53,6 @@ def run_refine(api_base, api_key, api_model, jd_info, cv_text):
         taskAI.jd_preprocess(input=jd),
         taskAI.cv_preprocess(input=cv),
     )
-    # result = [""] * 2
-    # while 1:
-    #     stop: bool = True
-    #     for i in range(len(gen)):
-    #         try:
-    #             result[i] += next(gen[i]).delta
-    #             stop = False
-    #         except StopIteration:
-    #             # info(f"gen[{i}] exhausted")
-    #             pass
-    #     yield result
-    #     if stop:
-    #         info("tasks done")
-    #         break
     for result in gen:
         yield result
 
@@ -87,11 +73,6 @@ def finalize_letter_txt(api_base, api_key, api_model, debug_CoT):
     for response in taskAI.purify_letter(full_text=debug_CoT):
         result += response.delta
         yield result
-    # gen = stream_together(
-    #     taskAI.purify_letter(full_text=debug_CoT),
-    # )
-    # for result in gen:
-    #     yield result
 
 def finalize_letter_pdf(api_base, api_key, api_model, jd, cv, cover_letter_text):
     cheapAPI = {"base": api_base, "key": api_key, "model": api_model}
@@ -99,7 +80,7 @@ def finalize_letter_pdf(api_base, api_key, api_model, jd, cv, cover_letter_text)
     meta_data = next(taskAI.get_jobapp_meta(JD=jd, CV=cv))
     pdf_context = json.loads(meta_data)
     pdf_context["letter_body"] = cover_letter_text
-    return meta_data, compile_pdf(pdf_context,tmpl_path="template_letter.tmpl",output_path=f"/tmp/cover_letter_by_{pdf_context['applicantFullName']}_to_{pdf_context['companyFullName']}.pdf")
+    return meta_data, compile_pdf(pdf_context,tmpl_path="typst/template_letter.tmpl",output_path=f"/tmp/cover_letter_by_{pdf_context['applicantFullName']}_to_{pdf_context['companyFullName']}.pdf")
 
 with gr.Blocks(
     title=DEMO_TITLE,

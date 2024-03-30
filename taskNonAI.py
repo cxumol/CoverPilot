@@ -54,8 +54,8 @@ def compile_pdf(context: dict, tmpl_path: str, output_path="/tmp/cover_letter.pd
     context = {k: typst_escape(v) for k, v in context.items()}
     context.update({'date_string': date()})
     letter_typ = tmpl.safe_substitute(context)
-    with open('letter.typ', 'w', encoding='utf8') as f:
+    with open('typst/letter.typ', 'w', encoding='utf8') as f:
         f.write(letter_typ)
-    typst.compile('letter.typ', output_path, font_paths=[Path('./fonts/')])
+    typst.compile('typst/letter.typ', output_path, root=Path('./typst/'), font_paths=[Path('./fonts/')])
     os.remove('letter.typ')
     return output_path
