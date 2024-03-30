@@ -56,7 +56,8 @@ def _typst_escape(s) -> str:
 def compile_pdf(
     context: dict, tmpl_path: str, output_path="/tmp/cover_letter.pdf", is_debug=False
 ) -> list[str]:
-    letter_src_filepath = "typst/letter.typ"
+    # letter_src_filepath = "typst/letter.typ"
+    letter_src_filepath = "typst/" + output_path.split("/")[-1][: -len(".pdf")] + ".typ"
     with open(tmpl_path, "r", encoding="utf8") as f:
         tmpl = Template(f.read())
     context = {k: _typst_escape(v) for k, v in context.items()}

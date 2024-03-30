@@ -65,7 +65,7 @@ Before officially write the letter, think step by step. First, list what makes a
 
 ## tasks
 class TaskAI(OpenAILike):
-    def __init__(self, api: dict[str, str], **kwargs):
+    def __init__(self, api: dict[str, str], is_debug: bool, **kwargs):
         log = logger.info
 
         def guess_window_size(model=api["model"]):
@@ -83,6 +83,7 @@ class TaskAI(OpenAILike):
             return window_size
 
         checkAPI(api_base, api_key)
+        self.is_debug = is_debug
 
         super().__init__(
             api_base=api["base"],
@@ -93,18 +94,28 @@ class TaskAI(OpenAILike):
             **kwargs,
         )
 
+    def _debug_print_msg(self, msg):
+        if not self.is_debug:
+            return
+        for m in msg:
+            print(m.content)
+
     def jd_preprocess(self, input: str):
-        return self.stream_chat(
-            EXTRACT_INFO.format_messages(
-                to_extract="the job description part`", input=input
-            )
+        msg = EXTRACT_INFO.format_messages(
+            to_extract="the job description part", input=input
         )
 
+        return self.stream_chat(msg)
+
     def cv_preprocess(self, input: str):
-        return self.stream_chat(SIMPLIFY_MD.format_messages(input=input))
+        msg = SIMPLIFY_MD.format_messages(input=input)
+        # if self.is_debug: logger.info(msg)
+        return self.stream_chat(msg)
 
     def compose_letter_CoT(self, resume: str, jd: str):
-        return self.stream_chat(LETTER_COMPOSE.format_messages(resume=resume, jd=jd))
+        msg = LETTER_COMPOSE.format_messages(resume=resume, jd=jd)
+        _debug_print_msg(msg)
+        return self.stream_chat(msg)
 
     def get_jobapp_meta(self, JD, CV):
         meta_JD = self.chat(

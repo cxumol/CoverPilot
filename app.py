@@ -196,8 +196,7 @@ with gr.Blocks(
             cover_letter_text = gr.Textbox(label="Cover Letter")
             cover_letter_pdf = gr.File(
                 label="Cover Letter PDF",
-                file_count="single",
-                file_types=[".pdf"],
+                file_count="multiple",
                 type="filepath",
             )
             infer_btn = gr.Button("Go!", variant="primary")
@@ -246,6 +245,7 @@ with gr.Blocks(
             jd_info,
             cv_text,
             cover_letter_text,
+            is_debug,
         ],
         outputs=[debug_jobapp, cover_letter_pdf],
     )
