@@ -174,10 +174,10 @@ with gr.Blocks(
     Model choice can be a interesting topic involing quite a few experiments. Feel free to try any other models you like!
 
     ## Troubleshooting
-    - If your API is on localhost / local network, you may need to run this app on local network too.
+    - If your API is on localhost / local network, you may need to host this app on local network too.
     - If your API is on some AI service platform, review if you have enough balance / credits / quota on the platform.
     - If you are sure that you have set up the API correctly, but encounter an error along the way, try click the "Go!" button again.
-    - Try change AI provider / model
+    - Try change AI provider / model.
     - Report to GitHub issue if you believe it's a bug.
 """)
     with gr.Row():
