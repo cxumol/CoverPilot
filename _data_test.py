@@ -71,10 +71,9 @@ Languages:
     Fluent in English and French
 """
 pdf_context = {
-  "companyFullName": "Queen of Hearts' Garden",
-  "jobTitle": "Card Guards",
-  "applicantFullName": "Sherlock Holmes",
-  "applicantContactInformation": "221B Baker Street, London, +44 (020) 1234-5678, sherlock.holmes@sherlockHolmes.com",
-  "letter_body": "text,\n\ntest test"
+    "companyFullName": "Queen of Hearts' Garden",
+    "jobTitle": "Card Guards",
+    "applicantFullName": "Sherlock Holmes",
+    "applicantContactInformation": "221B Baker Street, London, +44 (020) 1234-5678, sherlock.holmes@sherlockHolmes.com",
+    "letter_body": "text,\n\ntest test",
 }
-

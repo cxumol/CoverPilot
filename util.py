@@ -6,6 +6,7 @@ import logging
 
 from typing import Generator
 
+
 def mylogger(name, format, level=logging.INFO):
     # Create a custom logger
     logger = logging.getLogger(name)
@@ -33,7 +34,7 @@ def is_valid_url(url: str) -> bool:
         return False
 
 
-def is_valid_openai_api_key(api_base:str, api_key: str)->bool:
+def is_valid_openai_api_key(api_base: str, api_key: str) -> bool:
     headers = {"Authorization": f"Bearer {api_key}"}
 
     response = requests.get(api_base, headers=headers)
@@ -41,19 +42,20 @@ def is_valid_openai_api_key(api_base:str, api_key: str)->bool:
     return response.status_code == 200
 
 
-def zip_api(api_base:str, api_key:str, model:str)->dict[str, str]:
+def zip_api(api_base: str, api_key: str, model: str) -> dict[str, str]:
     return {"base": api_base, "key": api_key, "model": model}
 
+
 def stream_together(*gens: Generator):
-    ln=len(gens)
-    result = [""] * ln # Mind type here
+    ln = len(gens)
+    result = [""] * ln  # Mind type here
     while 1:
         stop: bool = True
         for i in range(ln):
             try:
-                n=next(gens[i])
+                n = next(gens[i])
                 if "delta" in dir(n):
-                    n=n.delta
+                    n = n.delta
                 result[i] += n
                 stop = False
             except StopIteration:

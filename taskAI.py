@@ -5,7 +5,8 @@ from llama_index.core.llms import ChatMessage  # , MessageRole
 from llama_index.core import ChatPromptTemplate
 
 from util import mylogger
-logger = mylogger(__name__,'%(asctime)s:%(filename)s:%(levelname)s:%(message)s')
+
+logger = mylogger(__name__, "%(asctime)s:%(filename)s:%(levelname)s:%(message)s")
 ## define templates
 
 ### topic,input
@@ -40,7 +41,7 @@ JSON_API = ChatPromptTemplate(
         ChatMessage(role="user", content="{content}"),
     ]
 )
-keys_to_template = lambda keys : json.dumps(dict().fromkeys(keys, ""))
+keys_to_template = lambda keys: json.dumps(dict().fromkeys(keys, ""))
 
 ### resume, jd
 LETTER_COMPOSE = ChatPromptTemplate(
@@ -51,16 +52,19 @@ LETTER_COMPOSE = ChatPromptTemplate(
 
 Before officially write the letter, think step by step. First, list what makes a perfect cover letter in general, and in order to write a perfect cover letter, what key points do you have to learn from the RESUME and JOB_DESCRIPTION. Then, carefully analyze the given RESUME and JOB_DESCRIPTION, take a deep breath and propose 3 best tactics to convince recruiter believe the applicant fit for the role. Ensure your thoughts are express clearly and then write the complete cover letter.""",
         ),
-        ChatMessage(role="user", content="<RESUME>\n{resume}\n</RESUME>\n\n<JOB_DESCRIPTION>\n{jd}</JOB_DESCRIPTION>\n<ANALYSIS_REPORT>"),
+        ChatMessage(
+            role="user",
+            content="<RESUME>\n{resume}\n</RESUME>\n\n<JOB_DESCRIPTION>\n{jd}</JOB_DESCRIPTION>\n<ANALYSIS_REPORT>",
+        ),
     ]
 )
 
 ## basic func
 
+
 ## tasks
 class TaskAI(OpenAILike):
     def __init__(self, api: dict[str, str], **kwargs):
-        
         log = logger.info
 
         def guess_window_size(model=api["model"]):
@@ -78,11 +82,20 @@ class TaskAI(OpenAILike):
             return window_size
 
         super().__init__(
-            api_base=api["base"], api_key=api["key"], model=api["model"], is_chat_model=True, context_window=guess_window_size(), **kwargs
+            api_base=api["base"],
+            api_key=api["key"],
+            model=api["model"],
+            is_chat_model=True,
+            context_window=guess_window_size(),
+            **kwargs,
         )
 
     def jd_preprocess(self, input: str):
-        return self.stream_chat(EXTRACT_INFO.format_messages(to_extract="the job description part`", input=input))
+        return self.stream_chat(
+            EXTRACT_INFO.format_messages(
+                to_extract="the job description part`", input=input
+            )
+        )
 
     def cv_preprocess(self, input: str):
         return self.stream_chat(SIMPLIFY_MD.format_messages(input=input))
@@ -91,20 +104,37 @@ class TaskAI(OpenAILike):
         return self.stream_chat(LETTER_COMPOSE.format_messages(resume=resume, jd=jd))
 
     def get_jobapp_meta(self, JD, CV):
-        meta_JD = self.chat(JSON_API.format_messages(template=keys_to_template(["companyFullName", "jobTitle"]), content=JD)).message.content
+        meta_JD = self.chat(
+            JSON_API.format_messages(
+                template=keys_to_template(["companyFullName", "jobTitle"]), content=JD
+            )
+        ).message.content
         # yield meta_JD
-        meta_CV = self.chat(JSON_API.format_messages(template=keys_to_template(["applicantFullNname", "applicantContactInformation"]), content=CV)).message.content
+        meta_CV = self.chat(
+            JSON_API.format_messages(
+                template=keys_to_template(
+                    ["applicantFullNname", "applicantContactInformation"]
+                ),
+                content=CV,
+            )
+        ).message.content
         # yield meta_JD+'\n'+meta_CV
         try:
             meta_JD = json.loads(meta_JD.strip())
             meta_CV = json.loads(meta_CV.strip())
         except:
-            raise ValueError(f"AI didn't return a valid JSON string. Try again or consider a better model for CheapAI. \n{meta_JD}\n{meta_CV}")
+            raise ValueError(
+                f"AI didn't return a valid JSON string. Try again or consider a better model for CheapAI. \n{meta_JD}\n{meta_CV}"
+            )
         meta = dict()
         meta.update(meta_JD)
         meta.update(meta_CV)
         yield json.dumps(meta, indent=2)
 
     def purify_letter(self, full_text):
-        return self.stream_chat(EXTRACT_INFO.format_messages(to_extract="the cover letter section starting from 'Dear Hiring Manager' or similar to 'Sincerely,' or similar ", input=full_text))
-
+        return self.stream_chat(
+            EXTRACT_INFO.format_messages(
+                to_extract="the cover letter section starting from 'Dear Hiring Manager' or similar to 'Sincerely,' or similar ",
+                input=full_text,
+            )
+        )

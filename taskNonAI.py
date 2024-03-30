@@ -40,22 +40,26 @@ def extract_url(url: str) -> Optional[str]:
             f"Please try copy-paste as input. Failed to extract content from: {url}. Didn't find content from given URL!"
         )
 
-def date():
+def _date()->str:
     current_date = datetime.now()
     return current_date.strftime(
         f"%B %d{'th' if 4 <= current_date.day <= 20 or 24 <= current_date.day <= 30 else ['st', 'nd', 'rd'][current_date.day % 10 - 1]} , %Y")
 
-def typst_escape(s):
+def _typst_escape(s)->str:
     return str(s).replace('@','\@').replace('#','\#')
-
-def compile_pdf(context: dict, tmpl_path: str, output_path="/tmp/cover_letter.pdf"):
+ 
+def compile_pdf(context: dict, tmpl_path: str, output_path="/tmp/cover_letter.pdf", is_debug=False)->list[str]:
+    letter_src_filepath = 'typst/letter.typ'
     with open(tmpl_path, "r", encoding='utf8') as f:
         tmpl = Template(f.read())
-    context = {k: typst_escape(v) for k, v in context.items()}
-    context.update({'date_string': date()})
+    context = {k: _typst_escape(v) for k, v in context.items()}
+    context.update({'date_string': _date()})
     letter_typ = tmpl.safe_substitute(context)
-    with open('typst/letter.typ', 'w', encoding='utf8') as f:
+    with open(letter_src_filepath, 'w', encoding='utf8') as f:
         f.write(letter_typ)
-    typst.compile('typst/letter.typ', output_path, root=Path('./typst/'), font_paths=[Path('./fonts/')])
-    os.remove('letter.typ')
-    return output_path
+    typst.compile(letter_src_filepath, output_path, root=Path('./typst/'), font_paths=[Path('./fonts/')])
+    # os.remove(letter_src_filepath)
+    if is_debug:
+        return [letter_src_filepath, output_path]
+    else:
+        return [output_path]

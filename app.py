@@ -1,4 +1,4 @@
-from config import DEMO_TITLE, IS_SHARE, CV_EXT, EXT_TXT
+from config import DEMO_TITLE, IS_SHARE, IS_DEBUG, CV_EXT, EXT_TXT
 from config import CHEAP_API_BASE, CHEAP_API_KEY, CHEAP_MODEL
 from config import STRONG_API_BASE, STRONG_API_KEY, STRONG_MODEL
 from util import is_valid_url
@@ -22,6 +22,27 @@ info = logger.info
 def init():
     os.system("shot-scraper install -b firefox")
     download_pandoc()
+
+
+## Config Functions
+
+def set_same_cheap_strong(set_same:bool, cheap_base, cheap_key, cheap_model):
+    setup_zone = gr.Accordion("AI setup (OpenAI-compatible LLM API)", open=True)
+    if set_same:
+        return (gr.Textbox(value=cheap_base, label="API Base", interactive=False),
+                gr.Textbox(value=cheap_key, label="API key", type="password", interactive=False),
+                gr.Textbox(value=cheap_model, label="Model ID", interactive=False),
+                setup_zone,
+                )
+    else:
+        return (gr.Textbox(value=cheap_base, label="API Base", interactive=True),
+                gr.Textbox(value=cheap_key, label="API key", type="password", interactive=True),
+                gr.Textbox(value=cheap_model, label="Model ID", interactive=True),
+                setup_zone,
+                )
+    
+
+## Main Functions
 
 def prepare_input(jd_info, cv_file: str, cv_text):
     if jd_info:
@@ -84,7 +105,7 @@ def finalize_letter_pdf(api_base, api_key, api_model, jd, cv, cover_letter_text)
 
 with gr.Blocks(
     title=DEMO_TITLE,
-    theme=gr.themes.Base(primary_hue="blue", secondary_hue="sky", neutral_hue="slate"),
+    theme=gr.themes.Soft(primary_hue="blue", secondary_hue="sky", neutral_hue="slate"),
 ) as app:
     intro = f"""# {DEMO_TITLE}
     > You provide job description and résumé. I write Cover letter for you!  
@@ -94,22 +115,25 @@ with gr.Blocks(
 
     with gr.Row():
         with gr.Column(scale=1):
-            with gr.Accordion("AI setup (OpenAI-compatible LLM API)", open=False):
+            with gr.Accordion("AI setup (OpenAI-compatible LLM API)", open=False) as setup_zone:
+                is_debug = gr.Checkbox( label="Debug Mode", value=IS_DEBUG)
+                
                 gr.Markdown(
                     "**Cheap AI**, an honest format converter and refiner, extracts essential info from job description and résumé, to reduce subsequent cost on Strong AI."
                 )
                 with gr.Group():
                     cheap_base = gr.Textbox(
-                        value=CHEAP_API_BASE, label="API BASE"
+                        value=CHEAP_API_BASE, label="API Base"
                     )
                     cheap_key = gr.Textbox(value=CHEAP_API_KEY, label="API key", type="password")
                     cheap_model = gr.Textbox(value=CHEAP_MODEL, label="Model ID")
                 gr.Markdown(
                     "---\n**Strong AI**, a thoughtful wordsmith, generates perfect cover letters to make both you and recruiters happy."
                 )
+                is_same_cheap_strong = gr.Checkbox(label="the same as Cheap AI", value=False, container=False)
                 with gr.Group():
                     strong_base = gr.Textbox(
-                        value=STRONG_API_BASE, label="API BASE"
+                        value=STRONG_API_BASE, label="API Base"
                     )
                     strong_key = gr.Textbox(
                         value=STRONG_API_KEY, label="API key", type="password"
@@ -155,6 +179,9 @@ with gr.Blocks(
             )
             infer_btn = gr.Button("Go!", variant="primary")
             
+    is_same_cheap_strong.change(fn= set_same_cheap_strong, 
+                                    inputs=[is_same_cheap_strong, cheap_base, cheap_key, cheap_model],
+                                    outputs=[strong_base, strong_key, strong_model, setup_zone])
 
     infer_btn.click(
         fn=prepare_input,
