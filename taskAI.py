@@ -83,7 +83,7 @@ class TaskAI(OpenAILike):
             return window_size
 
         checkAPI(api_base, api_key)
-        
+
         super().__init__(
             api_base=api["base"],
             api_key=api["key"],

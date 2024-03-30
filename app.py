@@ -9,16 +9,20 @@ from taskNonAI import extract_url, file_to_html, compile_pdf
 
 ## load data
 from _data_test import mock_jd, mock_cv
+
 ## ui
 import gradio as gr
+
 ## dependency
 from pypandoc.pandoc_download import download_pandoc
+
 ## std
 import os
 import json
 
-logger = mylogger(__name__,'%(asctime)s:%(levelname)s:%(message)s')
+logger = mylogger(__name__, "%(asctime)s:%(levelname)s:%(message)s")
 info = logger.info
+
 
 def init():
     os.system("shot-scraper install -b firefox")
@@ -27,23 +31,31 @@ def init():
 
 ## Config Functions
 
-def set_same_cheap_strong(set_same:bool, cheap_base, cheap_key):
+
+def set_same_cheap_strong(set_same: bool, cheap_base, cheap_key):
     # setup_zone = gr.Accordion("AI setup (OpenAI-compatible LLM API)", open=True)
     if set_same:
-        return (gr.Textbox(value=cheap_base, label="API Base", interactive=False),
-                gr.Textbox(value=cheap_key, label="API key", type="password", interactive=False),
-                gr.Textbox(value=cheap_model, label="Model ID", interactive=False),
-                # setup_zone,
-                )
+        return (
+            gr.Textbox(value=cheap_base, label="API Base", interactive=False),
+            gr.Textbox(
+                value=cheap_key, label="API key", type="password", interactive=False
+            ),
+            gr.Textbox(value=cheap_model, label="Model ID", interactive=False),
+            # setup_zone,
+        )
     else:
-        return (gr.Textbox(value=cheap_base, label="API Base", interactive=True),
-                gr.Textbox(value=cheap_key, label="API key", type="password", interactive=True),
-                gr.Textbox(value=cheap_model, label="Model ID", interactive=True),
-                # setup_zone,
-                )
-    
+        return (
+            gr.Textbox(value=cheap_base, label="API Base", interactive=True),
+            gr.Textbox(
+                value=cheap_key, label="API key", type="password", interactive=True
+            ),
+            gr.Textbox(value=cheap_model, label="Model ID", interactive=True),
+            # setup_zone,
+        )
+
 
 ## Main Functions
+
 
 def prepare_input(jd_info, cv_file: str, cv_text):
     if jd_info:
@@ -66,8 +78,9 @@ def prepare_input(jd_info, cv_file: str, cv_text):
         cv = mock_cv
     return jd, cv
 
+
 def run_refine(api_base, api_key, api_model, jd_info, cv_text):
-    jd,cv=jd_info,cv_text
+    jd, cv = jd_info, cv_text
     cheapAPI = {"base": api_base, "key": api_key, "model": api_model}
     taskAI = TaskAI(cheapAPI, temperature=0.2, max_tokens=2048)  # max_tokens=2048
     info("API initialized")
@@ -78,6 +91,7 @@ def run_refine(api_base, api_key, api_model, jd_info, cv_text):
     for result in gen:
         yield result
 
+
 def run_compose(api_base, api_key, api_model, min_jd, min_cv):
     strongAPI = {"base": api_base, "key": api_key, "model": api_model}
     taskAI = TaskAI(strongAPI, temperature=0.6, max_tokens=4000)
@@ -87,14 +101,16 @@ def run_compose(api_base, api_key, api_model, min_jd, min_cv):
         result += response.delta
         yield result
 
+
 def finalize_letter_txt(api_base, api_key, api_model, debug_CoT):
     cheapAPI = {"base": api_base, "key": api_key, "model": api_model}
     taskAI = TaskAI(cheapAPI, temperature=0.2, max_tokens=2048)
     info("Finalizing letter ...")
-    result=""
+    result = ""
     for response in taskAI.purify_letter(full_text=debug_CoT):
         result += response.delta
         yield result
+
 
 def finalize_letter_pdf(api_base, api_key, api_model, jd, cv, cover_letter_text):
     cheapAPI = {"base": api_base, "key": api_key, "model": api_model}
@@ -102,7 +118,12 @@ def finalize_letter_pdf(api_base, api_key, api_model, jd, cv, cover_letter_text)
     meta_data = next(taskAI.get_jobapp_meta(JD=jd, CV=cv))
     pdf_context = json.loads(meta_data)
     pdf_context["letter_body"] = cover_letter_text
-    return meta_data, compile_pdf(pdf_context,tmpl_path="typst/template_letter.tmpl",output_path=f"/tmp/cover_letter_by_{pdf_context['applicantFullName']}_to_{pdf_context['companyFullName']}.pdf")
+    return meta_data, compile_pdf(
+        pdf_context,
+        tmpl_path="typst/template_letter.tmpl",
+        output_path=f"/tmp/cover_letter_by_{pdf_context['applicantFullName']}_to_{pdf_context['companyFullName']}.pdf",
+    )
+
 
 with gr.Blocks(
     title=DEMO_TITLE,
@@ -116,26 +137,28 @@ with gr.Blocks(
 
     with gr.Row():
         with gr.Column(scale=1):
-            with gr.Accordion("AI setup (OpenAI-compatible LLM API)", open=False) as setup_zone:
-                is_debug = gr.Checkbox( label="Debug Mode", value=IS_DEBUG)
-                
+            with gr.Accordion(
+                "AI setup (OpenAI-compatible LLM API)", open=False
+            ) as setup_zone:
+                is_debug = gr.Checkbox(label="Debug Mode", value=IS_DEBUG)
+
                 gr.Markdown(
                     "**Cheap AI**, an honest format converter and refiner, extracts essential info from job description and résumé, to reduce subsequent cost on Strong AI."
                 )
                 with gr.Group():
-                    cheap_base = gr.Textbox(
-                        value=CHEAP_API_BASE, label="API Base"
+                    cheap_base = gr.Textbox(value=CHEAP_API_BASE, label="API Base")
+                    cheap_key = gr.Textbox(
+                        value=CHEAP_API_KEY, label="API key", type="password"
                     )
-                    cheap_key = gr.Textbox(value=CHEAP_API_KEY, label="API key", type="password")
                     cheap_model = gr.Textbox(value=CHEAP_MODEL, label="Model ID")
                 gr.Markdown(
                     "---\n**Strong AI**, a thoughtful wordsmith, generates perfect cover letters to make both you and recruiters happy."
                 )
-                is_same_cheap_strong = gr.Checkbox(label="the same as Cheap AI", value=False, container=False)
+                is_same_cheap_strong = gr.Checkbox(
+                    label="the same as Cheap AI", value=False, container=False
+                )
                 with gr.Group():
-                    strong_base = gr.Textbox(
-                        value=STRONG_API_BASE, label="API Base"
-                    )
+                    strong_base = gr.Textbox(value=STRONG_API_BASE, label="API Base")
                     strong_key = gr.Textbox(
                         value=STRONG_API_KEY, label="API key", type="password"
                     )
@@ -150,7 +173,7 @@ with gr.Blocks(
                 )
             with gr.Group():
                 gr.Markdown("## Applicant - CV / Résumé")
-            # with gr.Row():
+                # with gr.Row():
                 cv_file = gr.File(
                     label="Allowed formats: " + " ".join(CV_EXT),
                     file_count="single",
@@ -168,7 +191,6 @@ with gr.Blocks(
                     min_jd = gr.TextArea(label="Reformatted Job Description")
                     min_cv = gr.TextArea(label="Reformatted CV / Résumé")
             with gr.Accordion("Expert Zone", open=False) as expert_zone:
-                
                 debug_CoT = gr.Textbox(label="Chain of Thoughts")
                 debug_jobapp = gr.Textbox(label="Job application meta data")
             cover_letter_text = gr.Textbox(label="Cover Letter")
@@ -179,27 +201,54 @@ with gr.Blocks(
                 type="filepath",
             )
             infer_btn = gr.Button("Go!", variant="primary")
-            
-    is_same_cheap_strong.change(fn= set_same_cheap_strong, 
-                                    inputs=[is_same_cheap_strong, cheap_base, cheap_key, cheap_model],
-                                    outputs=[strong_base, strong_key, strong_model])
 
-    infer_btn.click(fn= set_same_cheap_strong, 
-                    inputs=[is_same_cheap_strong, cheap_base, cheap_key, cheap_model],
-                    outputs=[strong_base, strong_key, strong_model]
+    is_same_cheap_strong.change(
+        fn=set_same_cheap_strong,
+        inputs=[is_same_cheap_strong, cheap_base, cheap_key, cheap_model],
+        outputs=[strong_base, strong_key, strong_model],
+    )
+
+    infer_btn.click(
+        fn=set_same_cheap_strong,
+        inputs=[is_same_cheap_strong, cheap_base, cheap_key, cheap_model],
+        outputs=[strong_base, strong_key, strong_model],
     ).success(
-        fn=prepare_input,
-        inputs=[jd_info, cv_file, cv_text],
-        outputs=[jd_info, cv_text]
+        fn=prepare_input, inputs=[jd_info, cv_file, cv_text], outputs=[jd_info, cv_text]
     ).success(
         fn=run_refine,
         inputs=[cheap_base, cheap_key, cheap_model, jd_info, cv_text],
         outputs=[min_jd, min_cv],
-    ).success(fn=lambda:[gr.Accordion("Expert Zone", open=True),gr.Accordion("Reformatting", open=False)],inputs=None, outputs=[expert_zone, reformat_zone]
-    ).success(fn=run_compose, inputs=[strong_base, strong_key, strong_model, min_jd, min_cv], outputs=[debug_CoT]                      
-    ).success(fn=lambda:gr.Accordion("Expert Zone", open=False),inputs=None, outputs=[expert_zone]
-    ).success(fn=finalize_letter_txt, inputs=[cheap_base, cheap_key, cheap_model, debug_CoT], outputs=[cover_letter_text]
-    ).success(fn=finalize_letter_pdf, inputs=[cheap_base, cheap_key, cheap_model, jd_info, cv_text, cover_letter_text], outputs=[debug_jobapp, cover_letter_pdf])
+    ).success(
+        fn=lambda: [
+            gr.Accordion("Expert Zone", open=True),
+            gr.Accordion("Reformatting", open=False),
+        ],
+        inputs=None,
+        outputs=[expert_zone, reformat_zone],
+    ).success(
+        fn=run_compose,
+        inputs=[strong_base, strong_key, strong_model, min_jd, min_cv],
+        outputs=[debug_CoT],
+    ).success(
+        fn=lambda: gr.Accordion("Expert Zone", open=False),
+        inputs=None,
+        outputs=[expert_zone],
+    ).success(
+        fn=finalize_letter_txt,
+        inputs=[cheap_base, cheap_key, cheap_model, debug_CoT],
+        outputs=[cover_letter_text],
+    ).success(
+        fn=finalize_letter_pdf,
+        inputs=[
+            cheap_base,
+            cheap_key,
+            cheap_model,
+            jd_info,
+            cv_text,
+            cover_letter_text,
+        ],
+        outputs=[debug_jobapp, cover_letter_pdf],
+    )
 
 
 if __name__ == "__main__":
