@@ -21,6 +21,9 @@ from pypandoc.pandoc_download import download_pandoc
 import os
 import json
 
+## debug
+from icecream import ic
+
 logger = mylogger(__name__, "%(asctime)s:%(levelname)s:%(message)s")
 info = logger.info
 
@@ -33,7 +36,7 @@ def init():
 ## Config Functions
 
 
-def set_same_cheap_strong(set_same: bool, cheap_base, cheap_key, cheap_model):
+def set_same_cheap_strong(set_same: bool, cheap_base, cheap_key, cheap_model, strong_base, strong_key, strong_model):
     # setup_zone = gr.Accordion("AI setup (OpenAI-compatible LLM API)", open=True)
     if set_same:
         return (
@@ -46,11 +49,11 @@ def set_same_cheap_strong(set_same: bool, cheap_base, cheap_key, cheap_model):
         )
     else:
         return (
-            gr.Textbox(value=cheap_base, label="API Base", interactive=True),
+            gr.Textbox(value=strong_base, label="API Base", interactive=True),
             gr.Textbox(
-                value=cheap_key, label="API key", type="password", interactive=True
+                value=strong_key, label="API key", type="password", interactive=True
             ),
-            gr.Textbox(value=cheap_model, label="Model ID", interactive=True),
+            gr.Textbox(value=strong_model, label="Model ID", interactive=True),
             # setup_zone,
         )
 
@@ -111,6 +114,7 @@ def finalize_letter_txt(api_base, api_key, api_model, debug_CoT):
     for response in taskAI.purify_letter(full_text=debug_CoT):
         result += response.delta
         yield result
+    
 
 
 def finalize_letter_pdf(api_base, api_key, api_model, jd, cv, cover_letter_text, is_debug):
@@ -118,6 +122,8 @@ def finalize_letter_pdf(api_base, api_key, api_model, jd, cv, cover_letter_text,
     taskAI = TaskAI(cheapAPI, temperature=0.1, max_tokens=100)
     meta_data = next(taskAI.get_jobapp_meta(JD=jd, CV=cv))
     pdf_context = json.loads(meta_data)
+    if is_debug:
+        ic(pdf_context)
     pdf_context["letter_body"] = cover_letter_text
     return meta_data, compile_pdf(
         pdf_context,
@@ -205,16 +211,20 @@ with gr.Blocks(
 
     is_same_cheap_strong.change(
         fn=set_same_cheap_strong,
-        inputs=[is_same_cheap_strong, cheap_base, cheap_key, cheap_model],
+        inputs=[is_same_cheap_strong, cheap_base, cheap_key, cheap_model, strong_base, strong_key, strong_model],
         outputs=[strong_base, strong_key, strong_model],
     )
 
     infer_btn.click(
         fn=set_same_cheap_strong,
-        inputs=[is_same_cheap_strong, cheap_base, cheap_key, cheap_model],
+        inputs=[is_same_cheap_strong, cheap_base, cheap_key, cheap_model, strong_base, strong_key, strong_model],
         outputs=[strong_base, strong_key, strong_model],
     ).success(
         fn=prepare_input, inputs=[jd_info, cv_file, cv_text], outputs=[jd_info, cv_text]
+    ).success(
+        fn=lambda: gr.Accordion("Reformatting", open=True),
+        inputs=None,
+        outputs=[reformat_zone],
     ).success(
         fn=run_refine,
         inputs=[cheap_base, cheap_key, cheap_model, jd_info, cv_text],

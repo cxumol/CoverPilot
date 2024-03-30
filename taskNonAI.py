@@ -11,6 +11,8 @@ from string import Template
 from datetime import datetime
 from pathlib import Path
 
+from icecream import ic
+
 
 def file_to_html(file_path: str) -> str:
     return pypandoc.convert_file(file_path, "html")
@@ -56,7 +58,6 @@ def _ensure_no_signature_in_body(cover_letter_body: str) -> str:
     if not cover_letter_body.strip().endswith(","):
         # remove last line
         cover_letter_body = "\n".join(cover_letter_body.split("\n")[:-1])
-        print(cover_letter_body)
     return cover_letter_body
 
 def compile_pdf(

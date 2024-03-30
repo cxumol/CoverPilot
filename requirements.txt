@@ -9,5 +9,6 @@ llama-index-llms-openai-like
 tiktoken
 # lib
 requests
+icecream
 # dev tools
 ruff

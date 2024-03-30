@@ -7,6 +7,8 @@ from llama_index.core import ChatPromptTemplate
 from util import mylogger
 from util import checkAPI
 
+from icecream import ic
+
 logger = mylogger(__name__, "%(asctime)s:%(filename)s:%(levelname)s:%(message)s")
 ## define templates
 
@@ -129,7 +131,7 @@ class TaskAI(OpenAILike):
         meta_CV = self.chat(
             JSON_API.format_messages(
                 template=keys_to_template(
-                    ["applicantFullNname", "applicantContactInformation"]
+                    ["applicantFullName", "applicantContactInformation"]
                 ),
                 content=CV,
             )
@@ -139,7 +141,7 @@ class TaskAI(OpenAILike):
             meta_JD = json.loads(meta_JD.strip())
             meta_CV = json.loads(meta_CV.strip())
         except Exception as e:
-            print(e)
+            ic(e)
             raise ValueError(
                 f"AI didn't return a valid JSON string. Try again or consider a better model for CheapAI. \n{meta_JD}\n{meta_CV}"
             )
