@@ -36,7 +36,15 @@ def init():
 ## Config Functions
 
 
-def set_same_cheap_strong(set_same: bool, cheap_base, cheap_key, cheap_model, strong_base, strong_key, strong_model):
+def set_same_cheap_strong(
+    set_same: bool,
+    cheap_base,
+    cheap_key,
+    cheap_model,
+    strong_base,
+    strong_key,
+    strong_model,
+):
     # setup_zone = gr.Accordion("AI setup (OpenAI-compatible LLM API)", open=True)
     if set_same:
         return (
@@ -114,10 +122,11 @@ def finalize_letter_txt(api_base, api_key, api_model, debug_CoT):
     for response in taskAI.purify_letter(full_text=debug_CoT):
         result += response.delta
         yield result
-    
 
 
-def finalize_letter_pdf(api_base, api_key, api_model, jd, cv, cover_letter_text, is_debug):
+def finalize_letter_pdf(
+    api_base, api_key, api_model, jd, cv, cover_letter_text, is_debug
+):
     cheapAPI = {"base": api_base, "key": api_key, "model": api_model}
     taskAI = TaskAI(cheapAPI, temperature=0.1, max_tokens=100)
     meta_data = next(taskAI.get_jobapp_meta(JD=jd, CV=cv))
@@ -135,14 +144,23 @@ def finalize_letter_pdf(api_base, api_key, api_model, jd, cv, cover_letter_text,
 
 with gr.Blocks(
     title=DEMO_TITLE,
-    theme=gr.themes.Soft(primary_hue="sky", secondary_hue="emerald", neutral_hue="stone"),
+    theme=gr.themes.Soft(
+        primary_hue="sky", secondary_hue="emerald", neutral_hue="stone"
+    ),
 ) as app:
     intro = f"""# {DEMO_TITLE}
-    > You provide job description and résumé. I write Cover letter for you!  
-    Before you use, please fisrt setup API for 2 AI agents': Cheap AI and Strong AI.
+    > You provide job description and résumé, and I write Cover letter for you!  
+    Before you use, please fisrt setup API for 2 AI agents': **CheapAI** and StrongAI.
     """
     gr.Markdown(intro)
+    with gr.Accordion("User Guide", open=False):
+        guide = gr.Markdown("""## Setup
+    `API Key`: If you have no idea, go to https://beta.openai.com/account/api-keys  
 
+    `Model ID` to choose: 
+    - **CheapAI**: `gpt-3.5-turbo-*` should be fine if OpenAI won't make them lazier and dumber.  `Mistral-7B-Instruct-v0.1` works well, but `gemma-7b-it` doesn't, because gemma can't understand instructions properly in this case.
+    - **StrongAI**: Models with small context window size like won't work, such as `gpt-3.5-turbo-0613` or perhaps `gpt-4-0613`. `Mistral-7B-Instruct-v0.1` can do the job.
+""")
     with gr.Row():
         with gr.Column(scale=1):
             with gr.Accordion(
@@ -151,7 +169,7 @@ with gr.Blocks(
                 is_debug = gr.Checkbox(label="Debug Mode", value=IS_DEBUG)
 
                 gr.Markdown(
-                    "**Cheap AI**, an honest format converter and refiner, extracts essential info from job description and résumé, to reduce subsequent cost on Strong AI."
+                    "**CheapAI**, an honest format converter and refiner, extracts essential info from job description and résumé, to reduce subsequent cost on Strong AI."
                 )
                 with gr.Group():
                     cheap_base = gr.Textbox(value=CHEAP_API_BASE, label="API Base")
@@ -160,7 +178,7 @@ with gr.Blocks(
                     )
                     cheap_model = gr.Textbox(value=CHEAP_MODEL, label="Model ID")
                 gr.Markdown(
-                    "---\n**Strong AI**, a thoughtful wordsmith, generates perfect cover letters to make both you and recruiters happy."
+                    "---\n**StrongAI**, a thoughtful wordsmith, generates perfect cover letters to make both you and recruiters happy."
                 )
                 is_same_cheap_strong = gr.Checkbox(
                     label="the same as Cheap AI", value=False, container=False
@@ -211,13 +229,29 @@ with gr.Blocks(
 
     is_same_cheap_strong.change(
         fn=set_same_cheap_strong,
-        inputs=[is_same_cheap_strong, cheap_base, cheap_key, cheap_model, strong_base, strong_key, strong_model],
+        inputs=[
+            is_same_cheap_strong,
+            cheap_base,
+            cheap_key,
+            cheap_model,
+            strong_base,
+            strong_key,
+            strong_model,
+        ],
         outputs=[strong_base, strong_key, strong_model],
     )
 
     infer_btn.click(
         fn=set_same_cheap_strong,
-        inputs=[is_same_cheap_strong, cheap_base, cheap_key, cheap_model, strong_base, strong_key, strong_model],
+        inputs=[
+            is_same_cheap_strong,
+            cheap_base,
+            cheap_key,
+            cheap_model,
+            strong_base,
+            strong_key,
+            strong_model,
+        ],
         outputs=[strong_base, strong_key, strong_model],
     ).success(
         fn=prepare_input, inputs=[jd_info, cv_file, cv_text], outputs=[jd_info, cv_text]

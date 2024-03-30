@@ -68,6 +68,7 @@ Before officially write the letter, think step by step. First, list what makes a
 ## tasks
 class TaskAI(OpenAILike):
     is_debug = False
+
     def __init__(self, api: dict[str, str], is_debug=False, **kwargs):
         log = logger.info
 
@@ -86,7 +87,6 @@ class TaskAI(OpenAILike):
             return window_size
 
         checkAPI(api_base=api["base"], api_key=api["key"])
-        
 
         super().__init__(
             api_base=api["base"],
