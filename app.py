@@ -27,19 +27,19 @@ def init():
 
 ## Config Functions
 
-def set_same_cheap_strong(set_same:bool, cheap_base, cheap_key, cheap_model):
-    setup_zone = gr.Accordion("AI setup (OpenAI-compatible LLM API)", open=True)
+def set_same_cheap_strong(set_same:bool, cheap_base, cheap_key):
+    # setup_zone = gr.Accordion("AI setup (OpenAI-compatible LLM API)", open=True)
     if set_same:
         return (gr.Textbox(value=cheap_base, label="API Base", interactive=False),
                 gr.Textbox(value=cheap_key, label="API key", type="password", interactive=False),
                 gr.Textbox(value=cheap_model, label="Model ID", interactive=False),
-                setup_zone,
+                # setup_zone,
                 )
     else:
         return (gr.Textbox(value=cheap_base, label="API Base", interactive=True),
                 gr.Textbox(value=cheap_key, label="API key", type="password", interactive=True),
                 gr.Textbox(value=cheap_model, label="Model ID", interactive=True),
-                setup_zone,
+                # setup_zone,
                 )
     
 
@@ -182,21 +182,24 @@ with gr.Blocks(
             
     is_same_cheap_strong.change(fn= set_same_cheap_strong, 
                                     inputs=[is_same_cheap_strong, cheap_base, cheap_key, cheap_model],
-                                    outputs=[strong_base, strong_key, strong_model, setup_zone])
+                                    outputs=[strong_base, strong_key, strong_model])
 
-    infer_btn.click(
+    infer_btn.click(fn= set_same_cheap_strong, 
+                    inputs=[is_same_cheap_strong, cheap_base, cheap_key, cheap_model],
+                    outputs=[strong_base, strong_key, strong_model]
+    ).success(
         fn=prepare_input,
         inputs=[jd_info, cv_file, cv_text],
         outputs=[jd_info, cv_text]
-    ).then(
+    ).success(
         fn=run_refine,
         inputs=[cheap_base, cheap_key, cheap_model, jd_info, cv_text],
         outputs=[min_jd, min_cv],
-    ).then(fn=lambda:[gr.Accordion("Expert Zone", open=True),gr.Accordion("Reformatting", open=False)],inputs=None, outputs=[expert_zone, reformat_zone]
-    ).then(fn=run_compose, inputs=[strong_base, strong_key, strong_model, min_jd, min_cv], outputs=[debug_CoT]                      
-    ).then(fn=lambda:gr.Accordion("Expert Zone", open=False),inputs=None, outputs=[expert_zone]
-    ).then(fn=finalize_letter_txt, inputs=[cheap_base, cheap_key, cheap_model, debug_CoT], outputs=[cover_letter_text]
-    ).then(fn=finalize_letter_pdf, inputs=[cheap_base, cheap_key, cheap_model, jd_info, cv_text, cover_letter_text], outputs=[debug_jobapp, cover_letter_pdf])
+    ).success(fn=lambda:[gr.Accordion("Expert Zone", open=True),gr.Accordion("Reformatting", open=False)],inputs=None, outputs=[expert_zone, reformat_zone]
+    ).success(fn=run_compose, inputs=[strong_base, strong_key, strong_model, min_jd, min_cv], outputs=[debug_CoT]                      
+    ).success(fn=lambda:gr.Accordion("Expert Zone", open=False),inputs=None, outputs=[expert_zone]
+    ).success(fn=finalize_letter_txt, inputs=[cheap_base, cheap_key, cheap_model, debug_CoT], outputs=[cover_letter_text]
+    ).success(fn=finalize_letter_pdf, inputs=[cheap_base, cheap_key, cheap_model, jd_info, cv_text, cover_letter_text], outputs=[debug_jobapp, cover_letter_pdf])
 
 
 if __name__ == "__main__":
