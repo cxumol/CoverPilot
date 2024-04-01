@@ -5,7 +5,7 @@ colorFrom: blue
 colorTo: gray
 sdk: gradio
 sdk_version: 4.24.0
-app_file: app.py
+app_file: app/app.py
 pinned: false
 license: mit
 short_description: AI-Powered Cover Letter Generator

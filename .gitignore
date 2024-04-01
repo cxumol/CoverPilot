@@ -1,12 +1,12 @@
-*_secret.py
-*_secret.py*
+**/*_secret.py
+**/*_secret.py*
 **/test_result.pdf
 **/letter.typ
 **/cover_letter_*.typ
 
 .local/
 .ruff_cache/
-bin/
+**/bin/
 *.deb
 *.bin
 

@@ -1,2 +1,2 @@
 #!/bin/bash
-IS_SHARE=1 python app.py
+IS_SHARE=1 python app/app.py
