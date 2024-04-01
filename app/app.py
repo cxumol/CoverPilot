@@ -276,6 +276,10 @@ with gr.Blocks(
             strong_model,
         ],
         outputs=[strong_base, strong_key, strong_model],
+    ).then(
+        fn=lambda: gr.Accordion("AI setup (OpenAI-compatible LLM API)", open=False),
+        inputs=None,
+        outputs=[setup_zone],
     ).success(
         fn=prepare_input, inputs=[jd_info, cv_file, cv_text], outputs=[jd_info, cv_text]
     ).success(
