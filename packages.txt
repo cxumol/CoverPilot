@@ -1,0 +1,5 @@
+libxcomposite1
+libxdamage1
+libgtk-3-0
+libgdk-3-0
+libatk1.0-0
