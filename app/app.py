@@ -4,7 +4,7 @@ from config import STRONG_API_BASE, STRONG_API_KEY, STRONG_MODEL
 from util import is_valid_url
 from util import mylogger
 from util import stream_together
-from util import checkAPI
+# from util import checkAPI
 from taskNonAI import extract_url, file_to_html, compile_pdf
 from taskAI import TaskAI
 
@@ -136,8 +136,8 @@ def finalize_letter_pdf(
     pdf_context["letter_body"] = cover_letter_text
     return meta_data, compile_pdf(
         pdf_context,
-        tmpl_path="typst/template_letter.tmpl",
-        output_path=f"/tmp/cover_letter_by_{pdf_context['applicantFullName']}_to_{pdf_context['companyFullName']}.pdf",
+        tmpl_path="app/typst/template_letter.tmpl",
+        output_path=f"cover_letter_by_{pdf_context['applicantFullName']}_to_{pdf_context['companyFullName']}.pdf",
         is_debug=is_debug,
     )
 
@@ -259,7 +259,9 @@ with gr.Blocks(
         ],
         outputs=[strong_base, strong_key, strong_model],
     ).then(
-        fn=lambda: gr.Accordion("AI setup (OpenAI-compatible LLM API)", open=True), inputs=None, outputs=[setup_zone]
+        fn=lambda: gr.Accordion("AI setup (OpenAI-compatible LLM API)", open=True),
+        inputs=None,
+        outputs=[setup_zone],
     )
 
     infer_btn.click(

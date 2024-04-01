@@ -3,6 +3,7 @@
 **/test_result.pdf
 **/letter.typ
 **/cover_letter_*.typ
+**/cover_letter_*.pdf
 
 .local/
 .ruff_cache/

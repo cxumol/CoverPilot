@@ -63,10 +63,10 @@ def _ensure_no_signature_in_body(cover_letter_body: str) -> str:
 
 
 def compile_pdf(
-    context: dict, tmpl_path: str, output_path="/tmp/cover_letter.pdf", is_debug=False
+    context: dict, tmpl_path: str, output_path="cover_letter.pdf", is_debug=False
 ) -> list[str]:
     # letter_src_filepath = "typst/letter.typ"
-    letter_src_filepath = "typst/" + output_path.split("/")[-1][: -len(".pdf")] + ".typ"
+    letter_src_filepath = "app/typst/" + output_path.split("/")[-1][: -len(".pdf")] + ".typ"
     with open(tmpl_path, "r", encoding="utf8") as f:
         tmpl = Template(f.read())
     context = {k: _typst_escape(v) for k, v in context.items()}
@@ -79,8 +79,8 @@ def compile_pdf(
     typst.compile(
         letter_src_filepath,
         output_path,
-        root=Path("./typst/"),
-        font_paths=[Path("./fonts/")],
+        root=Path("app/typst/"),
+        font_paths=[Path("app/fonts/")],
     )
     # os.remove(letter_src_filepath)
     if is_debug:
