@@ -233,8 +233,8 @@ with gr.Blocks(
             gr.Markdown("## Result")
             with gr.Accordion("Reformatting", open=True) as reformat_zone:
                 with gr.Row():
-                    min_jd = gr.TextArea(label="Reformatted Job Description")
-                    min_cv = gr.TextArea(label="Reformatted CV / Résumé")
+                    min_jd = gr.TextArea(label="Clean verion of Job Description")
+                    min_cv = gr.TextArea(label="Clean verion of CV / Résumé")
             with gr.Accordion("Expert Zone", open=False) as expert_zone:
                 debug_CoT = gr.Textbox(label="Chain of Thoughts")
                 debug_jobapp = gr.Textbox(label="Job application meta data")
