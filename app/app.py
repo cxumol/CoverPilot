@@ -158,13 +158,14 @@ with gr.Blocks(
 ) as app:
     intro = f"""# {DEMO_TITLE}
     > You provide job description and résumé, and I write Cover letter for you!  
-    
+
+    **IMPORTANT** In order to enable AI capability, you have to ***BRING YOUR OWN API Key***. 
     """
     gr.Markdown(intro)
     with gr.Accordion("=== IMPORTANT: READ ME FIRST ===", open=False):
         guide = gr.Markdown("""## Setup
 
-    > **IMPORTANT**: Setup **API Keys** for 2 AI agents, CheapAI and StrongAI, on the "AI Setup" panel before you start. If you know what you are doing, change other API configurations as well.
+    > **IMPORTANT**: First setup **API Keys** for 2 AI agents, CheapAI and StrongAI, on the "AI Setup" panel before you start. If you know what you are doing, change other API configurations as well.
 
     + `API Key`: If you have no idea, go to https://beta.openai.com/account/api-keys  
 
