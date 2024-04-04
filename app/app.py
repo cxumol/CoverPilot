@@ -162,7 +162,7 @@ with gr.Blocks(
     intro = f"""# {DEMO_TITLE}
     > You provide job description and résumé, and I write Cover letter for you!  
 
-    **IMPORTANT** In order to enable AI capability, you have to ***BRING YOUR OWN API Key***. 
+    **IMPORTANT** API Keys are not provided by default. In order to enable AI capability, you have to ***BRING YOUR OWN API Key***. 
     """
     gr.Markdown(intro)
     with gr.Accordion("=== IMPORTANT: READ ME FIRST ===", open=False):
