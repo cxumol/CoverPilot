@@ -21,11 +21,14 @@ short_description: AI-Powered Cover Letter Generator
   <img src="asset/banner.png" width="400"/> 
 
 
-CoverPilot is an AI-powered cover letter generator. It helps you focus on what matters most - getting the job.
+🎩 **CoverPilot** is an AI-powered cover letter generator. It helps you focus on what matters most - getting the job.
 
 [Watch process in action](#demo) |
 [How it can help](#workflow) |
 [Deploy your own](#setup)
+
+![sync_to_HF](https://github.com/cxumol/CoverPilot/actions/workflows/hf_sync.yml/badge.svg) |
+[![Hugging Face](https://img.shields.io/badge/App-%F0%9F%A4%97%20Hugging%20Face-blue)](https://huggingface.co/spaces/cxumol/CoverPilot)
 
 </div>
 
@@ -35,11 +38,11 @@ CoverPilot is an AI-powered cover letter generator. It helps you focus on what m
 
 https://github.com/cxumol/CoverPilot/assets/8279655/fe66bc9a-8d05-4f69-b3f5-b48f66464993
 
-- Try it on Hugging Face now! [![Hugging Face](https://img.shields.io/badge/Demo-%F0%9F%A4%97%20Hugging%20Face-blue)](https://huggingface.co/spaces/cxumol/CoverPilot)
+- Try it on Hugging Face now! [![Hugging Face](https://img.shields.io/badge/App-%F0%9F%A4%97%20Hugging%20Face-blue)](https://huggingface.co/spaces/cxumol/CoverPilot)
 
 ## Workflow
 
-With the power of Prompt Engineering, CoverPilot can deeply understand your resume and the job description, and find the best writing style to match your resume with the job. The following flow graph illustrates how CoverPilot works. 
+With powerful Prompt Engineering, CoverPilot can deeply understand your resume and the job description, and find the best writing style to match your resume with the job. The following flow graph illustrates how CoverPilot works. 
 
 ![workflow](asset/CoverPilot_workflow.png)
 
@@ -79,7 +82,7 @@ If you are still confused about how to use it, check out the [demo video](#demo)
 
 ## Example
 
-Here is an example of output pdf [cover_letter_by_Steve Jobs_to_Microsoft.pdf](asset/example_cover_letter_by_Steve Jobs_to_Microsoft.pdf)
+Here is an example of generated file [cover_letter_by_Steve Jobs_to_Microsoft.pdf](https://github.com/cxumol/CoverPilot/blob/main/asset/example_cover_letter_by_Steve%20Jobs_to_Microsoft.pdf)
 
 > [!TIP]
 > Yes, it's generated from the video demo.
