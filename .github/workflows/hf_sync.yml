@@ -1,3 +1,4 @@
+# https://huggingface.co/docs/hub/en/spaces-github-actions
 name: Sync to Hugging Face hub
 on:
   push:
