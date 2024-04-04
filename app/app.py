@@ -161,10 +161,10 @@ with gr.Blocks(
     
     """
     gr.Markdown(intro)
-    with gr.Accordion("READ ME FIRST", open=False):
+    with gr.Accordion("=== IMPORTANT: READ ME FIRST ===", open=False):
         guide = gr.Markdown("""## Setup
 
-    > Expand "AI Setup" panel and setup API for 2 AI agents, **CheapAI** and **StrongAI**, before you start.
+    > **IMPORTANT**: Setup **API Keys** for 2 AI agents, CheapAI and StrongAI, on the "AI Setup" panel before you start. If you know what you are doing, change other API configurations as well.
 
     + `API Key`: If you have no idea, go to https://beta.openai.com/account/api-keys  
 
