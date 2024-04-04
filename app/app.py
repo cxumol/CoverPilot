@@ -253,7 +253,7 @@ with gr.Blocks(
                 type="filepath",
             )
             infer_btn = gr.Button("Go!", variant="primary")
-            gr.Markdown("#### Like it? Give me a star [on GitHub](https://github.com/cxumol/CoverPilot) !")
+            gr.Markdown("#### Like it? Give me a star ⭐ [on GitHub](https://github.com/cxumol/CoverPilot)!")
 
     is_same_cheap_strong.change(
         fn=set_same_cheap_strong,
