@@ -10,5 +10,7 @@ tiktoken
 # lib
 requests
 icecream
+# platform specific
+huggingface_hub
 # dev tools
 ruff

@@ -24,13 +24,21 @@ import json
 ## debug
 from icecream import ic
 
+## platform specific
+from _hf import HF, REPO_ID
+
 logger = mylogger(__name__, "%(asctime)s:%(levelname)s:%(message)s")
 info = logger.info
 
 
 def init():
-    os.system("shot-scraper install -b firefox")
-    download_pandoc()
+    try:
+        os.system("shot-scraper install -b firefox")
+        download_pandoc()
+    except Exception as e:
+        ic(e)
+        if HF:
+            HF.restart_space(REPO_ID)
 
 
 ## Config Functions
