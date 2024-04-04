@@ -63,11 +63,11 @@ In CoverPilot, we hire two AI agents cooperatively writing your cover letter:
 > You have to bring your own API keys.  
 > If you have no idea about it, try getting one from https://beta.openai.com/account/api-keys
 
-The API base defaults to OpenAI's, and compatible with AI service providers who have the same API structure.
+Its API base defaults to OpenAI's, and compatible with other AI chat service providers who have the same API structure.
 
-Once you obtained can set API configurations in 2 ways:
+API configurations can be set in 2 ways:
 - environment variables
-- AI Setup panel on the Web UI
+- Web UI
 
 Check out the [config.py](app/config.py) for more details.
 
