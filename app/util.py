@@ -48,7 +48,7 @@ def is_valid_openai_api_key(api_base: str, api_key: str) -> bool:
 def checkAPI(api_base: str, api_key: str):
     if not is_valid_openai_api_key(api_base, api_key):
         raise ValueError(
-            "API not available. Maybe it's OpenAI's (or AI provider's) fault, or you setup your AI APIs icorrectly. If you don't have any API key, try get one from https://beta.openai.com/account/api-keys"
+            "API not available. Did you forget to setup your API Keys? If you don't have any API key, try getting one from https://beta.openai.com/account/api-keys"
         )
 
 
