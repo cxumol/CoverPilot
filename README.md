@@ -78,6 +78,7 @@ Check out the [config.py](app/config.py) for more details.
 ### Run on local
 
 ```bash
+git lfs install
 git clone https://github.com/cxumol/CoverPilot.git && cd CoverPilot
 pip install -r requirements.txt
 python app/app.py
