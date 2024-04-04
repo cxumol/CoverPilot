@@ -75,7 +75,7 @@ def set_same_cheap_strong(
 
 def check_API_Key_provision(cheap_key, strong_key):
     if not cheap_key or not strong_key:
-        raise ValueError("API Key is not provided. You can get one from https://beta.openai.com/account/api-keys. Please read the in-App guide carefully before you start.")
+        raise ValueError("Please set your API Key before you start. You can get one from https://beta.openai.com/account/api-keys. Please read the in-App guide carefully.")
 
 ## Main Functions
 
