@@ -42,7 +42,15 @@ https://github.com/cxumol/CoverPilot/assets/8279655/fe66bc9a-8d05-4f69-b3f5-b48f
 
 ## Workflow
 
-With powerful Prompt Engineering, CoverPilot can deeply understand your resume and the job description, and find the best writing style to match your experience with the job. The following flow graph illustrates how CoverPilot works. 
+With powerful Prompt Engineering, CoverPilot can deeply understand your resume and the job description, and find the best writing style to match your experience with the job. 
+
+In CoverPilot, we hire two AI agents cooperatively writing your cover letter:
+
+- **CheapAI**, an honest format converter and refiner, extracts essential info from job description and résumé.
+- **StrongAI**, a thoughtful wordsmith, composes perfect cover letters to make both you and recruiters happy.
+
+> Thanks to **CheapAI**'s work, your spending on **StrongAI** is substaintially saved.
+
 
 ![workflow](asset/CoverPilot_workflow.png)
 
