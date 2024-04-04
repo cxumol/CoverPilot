@@ -200,7 +200,7 @@ with gr.Blocks(
                 is_debug = gr.Checkbox(label="Debug Mode", value=IS_DEBUG)
 
                 gr.Markdown(
-                    "**CheapAI**, an honest format converter and refiner, extracts essential info from job description and résumé, to reduce subsequent cost on Strong AI."
+                    "**CheapAI**, an honest format converter and refiner, extracts essential info from job description and résumé."
                 )
                 with gr.Group():
                     cheap_base = gr.Textbox(value=CHEAP_API_BASE, label="API Base")
@@ -220,6 +220,9 @@ with gr.Blocks(
                         value=STRONG_API_KEY, label="API key", type="password"
                     )
                     strong_model = gr.Textbox(value=STRONG_MODEL, label="Model ID")
+                gr.Markdown(
+                    "> Thanks to **CheapAI**'s work, your spending on **StrongAI** is substaintially saved.."
+                )
             with gr.Group():
                 gr.Markdown("## Employer - Job Description")
                 jd_info = gr.Textbox(
