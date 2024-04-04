@@ -183,7 +183,7 @@ with gr.Blocks(
                 - `gpt-3.5-turbo-0613`
                 -  perhaps `gpt-4-0613`
     
-    Model choice can be a interesting topic involing quite a few experiments. Feel free to try any other models you like!
+    Model choice can be an interesting topic involing quite a few experiments. Feel free to try any other models you like!
 
     ## Troubleshooting
     - If your API is on localhost / local network, you may need to host this app on local network too.
