@@ -28,7 +28,7 @@ short_description: AI-Powered Cover Letter Generator
 [Deploy your own](#setup)
 
 ![sync_to_HF](https://github.com/cxumol/CoverPilot/actions/workflows/hf_sync.yml/badge.svg) |
-[![Hugging Face](https://img.shields.io/badge/App-%F0%9F%A4%97%20Hugging%20Face-blue)](https://huggingface.co/spaces/cxumol/CoverPilot)
+[![Hugging Face](https://img.shields.io/badge/App%20Hosted%20on-%F0%9F%A4%97%20Hugging%20Face-blue)](https://huggingface.co/spaces/cxumol/CoverPilot)
 
 </div>
 
@@ -38,7 +38,7 @@ short_description: AI-Powered Cover Letter Generator
 
 https://github.com/cxumol/CoverPilot/assets/8279655/fe66bc9a-8d05-4f69-b3f5-b48f66464993
 
-- Try it on Hugging Face now! [![Hugging Face](https://img.shields.io/badge/App-%F0%9F%A4%97%20Hugging%20Face-blue)](https://huggingface.co/spaces/cxumol/CoverPilot)
+- Try it on Hugging Face now! [![Hugging Face](https://img.shields.io/badge/App%20Hosted%20on-%F0%9F%A4%97%20Hugging%20Face-blue)](https://huggingface.co/spaces/cxumol/CoverPilot)
 
 ## Workflow
 
