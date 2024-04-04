@@ -186,7 +186,7 @@ with gr.Blocks(
     - If your API is on some AI service platform, review if you have enough balance / credits / quota on the platform.
     - If you are sure that you have set up the API correctly, but encounter an error along the way, try click the "Go!" button again.
     - Try change AI provider / model.
-    - Report to GitHub issue if you believe it's a bug.
+    - Report to [GitHub issue](https://github.com/cxumol/CoverPilot/issues) if you believe it's a bug.
 """)
     with gr.Row():
         with gr.Column(scale=1):
@@ -253,6 +253,7 @@ with gr.Blocks(
                 type="filepath",
             )
             infer_btn = gr.Button("Go!", variant="primary")
+            gr.Markdown("#### Like it? Give me a star [on GitHub](https://github.com/cxumol/CoverPilot) !")
 
     is_same_cheap_strong.change(
         fn=set_same_cheap_strong,
