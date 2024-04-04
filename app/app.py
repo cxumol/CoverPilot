@@ -73,6 +73,9 @@ def set_same_cheap_strong(
             # setup_zone,
         )
 
+def check_API_Key_provision(cheap_key, strong_key):
+    if not cheap_key or not strong_key:
+        raise ValueError("API Key is not provided. You can get one from https://beta.openai.com/account/api-keys. Please read the in-App guide carefully before you start.")
 
 ## Main Functions
 
@@ -290,6 +293,8 @@ with gr.Blocks(
         fn=lambda: gr.Accordion("AI setup (OpenAI-compatible LLM API)", open=False),
         inputs=None,
         outputs=[setup_zone],
+    ).success(
+        fn=check_API_Key_provision, inputs=[cheap_key, strong_key], outputs=None
     ).success(
         fn=prepare_input, inputs=[jd_info, cv_file, cv_text], outputs=[jd_info, cv_text]
     ).success(
