@@ -24,7 +24,7 @@ short_description: AI-Powered Cover Letter Generator
 🎩 **CoverPilot** is an AI-powered cover letter generator. It helps you focus on what matters most - getting the job.
 
 [Watch process in action](#demo) |
-[How it can help](#workflow) |
+[How it can help](#mechanism) |
 [Deploy your own](#setup)
 
 ![sync_to_HF](https://github.com/cxumol/CoverPilot/actions/workflows/hf_sync.yml/badge.svg) |
@@ -40,7 +40,7 @@ https://github.com/cxumol/CoverPilot/assets/8279655/fe66bc9a-8d05-4f69-b3f5-b48f
 
 - Try it on Hugging Face now! [![Hugging Face](https://img.shields.io/badge/App%20Hosted%20on-%F0%9F%A4%97%20Hugging%20Face-blue)](https://huggingface.co/spaces/cxumol/CoverPilot)
 
-## Workflow
+## Mechanism
 
 With powerful Prompt Engineering, CoverPilot can deeply understand your resume and the job description, and find the best writing style to match your experience with the job. 
 
