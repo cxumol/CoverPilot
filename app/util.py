@@ -41,7 +41,10 @@ def is_valid_openai_api_key(api_base: str, api_key: str) -> bool:
     test_url = f"{api_base}/models"
     response = requests.get(test_url, headers=headers)
     if response.status_code in range(200,300):
-        ic(response.text())
+        try:
+            ic(response.json())
+        except:
+            ic(response.text)
     return response.status_code in range(200,300)
 
 
