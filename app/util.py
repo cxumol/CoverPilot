@@ -40,9 +40,9 @@ def is_valid_openai_api_key(api_base: str, api_key: str) -> bool:
     headers = {"Authorization": f"Bearer {api_key}"}
     test_url = f"{api_base}/models"
     response = requests.get(test_url, headers=headers)
-    if response.status_code != 200:
-        ic(response.json())
-    return response.status_code == 200
+    if response.status_code in range(200,300):
+        ic(response.text())
+    return response.status_code in range(200,300)
 
 
 def checkAPI(api_base: str, api_key: str):
