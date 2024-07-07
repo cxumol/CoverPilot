@@ -75,7 +75,7 @@ def set_same_cheap_strong(
 
 def check_API_Key_provision(cheap_key, strong_key):
     if not cheap_key or not strong_key:
-        raise ValueError("API Key is not provided. You can get one from https://beta.openai.com/account/api-keys. Please read the in-App guide carefully before you start.")
+        raise ValueError("Please set your API Key before you start. You can get one from https://beta.openai.com/account/api-keys. Please read the in-App guide carefully.")
 
 ## Main Functions
 
@@ -162,7 +162,7 @@ with gr.Blocks(
     intro = f"""# {DEMO_TITLE}
     > You provide job description and résumé, and I write Cover letter for you!  
 
-    **IMPORTANT** In order to enable AI capability, you have to ***BRING YOUR OWN API Key***. 
+    **IMPORTANT** API Keys are not provided by default. In order to enable AI capability, you have to ***BRING YOUR OWN API Key***. 
     """
     gr.Markdown(intro)
     with gr.Accordion("=== IMPORTANT: READ ME FIRST ===", open=False):
