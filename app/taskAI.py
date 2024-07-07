@@ -6,6 +6,7 @@ from llama_index.core import ChatPromptTemplate
 
 from util import mylogger
 from util import checkAPI
+from utilAI import extract_json_from_text
 
 from icecream import ic
 
@@ -138,8 +139,10 @@ class TaskAI(OpenAILike):
         ).message.content
         # yield meta_JD+'\n'+meta_CV
         try:
-            meta_JD = json.loads(meta_JD.strip())
-            meta_CV = json.loads(meta_CV.strip())
+            # meta_JD = json.loads(meta_JD.strip())
+            # meta_CV = json.loads(meta_CV.strip())
+            meta_JD = extract_json_from_text(meta_JD.strip())
+            meta_CV = extract_json_from_text(meta_CV.strip())
         except Exception as e:
             ic(e)
             raise ValueError(
