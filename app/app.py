@@ -304,12 +304,20 @@ with gr.Blocks(
         fn=apply_quick_config,
         inputs=[quick_config_cheapAI, cheap_base, cheap_key, cheap_model],
         outputs=[cheap_base, cheap_key, cheap_model],
+    ).then(
+        fn=lambda: gr.Accordion("AI setup (OpenAI-compatible LLM API)", open=True),
+        inputs=None,
+        outputs=[setup_zone],
     )
 
     apply_strong_btn.click(
         fn=apply_quick_config,
         inputs=[quick_config_strongAI, strong_base, strong_key, strong_model],
         outputs=[strong_base, strong_key, strong_model],
+    ).then(
+        fn=lambda: gr.Accordion("AI setup (OpenAI-compatible LLM API)", open=True),
+        inputs=None,
+        outputs=[setup_zone],
     )
 
     infer_btn.click(
