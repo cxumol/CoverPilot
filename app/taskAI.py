@@ -68,10 +68,10 @@ Before officially write the letter, think step by step. First, list what makes a
 
 ## tasks
 class TaskAI(OpenAILike):
-
+    is_debug: bool = False
+    
     def __init__(self, api: dict[str, str], is_debug=False, **kwargs):
         log = logger.info
-        self.is_debug : bool = is_debug
 
         def guess_window_size(model=api["model"]):
             _mid = model.lower()
@@ -97,6 +97,7 @@ class TaskAI(OpenAILike):
             context_window=guess_window_size(),
             **kwargs,
         )
+        self.is_debug = is_debug
 
     def _debug_print_msg(self, msg):
         if not self.is_debug:
