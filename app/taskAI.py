@@ -71,7 +71,7 @@ class TaskAI(OpenAILike):
 
     def __init__(self, api: dict[str, str], is_debug=False, **kwargs):
         log = logger.info
-        self.is_debug = is_debug
+        self.is_debug : bool = is_debug
 
         def guess_window_size(model=api["model"]):
             _mid = model.lower()
