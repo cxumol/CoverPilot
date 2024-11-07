@@ -43,6 +43,15 @@ def init():
 
 ## Config Functions
 
+def apply_quick_config(config_json, target_base, target_key, target_model):
+    try:
+        config = json.loads(config_json)
+        updated_base = config.get("base", target_base)
+        updated_key = config.get("key", target_key)
+        updated_model = config.get("model", target_model)
+        return updated_base, updated_key, updated_model
+    except json.JSONDecodeError:
+        return target_base, target_key, target_model  # Keep original values if JSON is invalid
 
 def set_same_cheap_strong(
     set_same: bool,
@@ -202,6 +211,11 @@ with gr.Blocks(
                 gr.Markdown(
                     "**CheapAI**, an honest format converter and refiner, extracts essential info from job description and résumé."
                 )
+                
+                with gr.Row():
+                    quick_config_cheapAI = gr.Textbox(label="Quick Config (JSON)")
+                    apply_cheap_btn = gr.Button("Apply Quick Config", variant="secondary")
+
                 with gr.Group():
                     cheap_base = gr.Textbox(value=CHEAP_API_BASE, label="API Base")
                     cheap_key = gr.Textbox(
@@ -214,6 +228,11 @@ with gr.Blocks(
                 is_same_cheap_strong = gr.Checkbox(
                     label="the same as Cheap AI", value=False, container=False
                 )
+
+                with gr.Row():
+                    quick_config_strongAI = gr.Textbox(label="Quick Config (JSON)")
+                    apply_strong_btn = gr.Button("Apply Quick Config", variant="secondary")
+                    
                 with gr.Group():
                     strong_base = gr.Textbox(value=STRONG_API_BASE, label="API Base")
                     strong_key = gr.Textbox(
@@ -278,6 +297,19 @@ with gr.Blocks(
         fn=lambda: gr.Accordion("AI setup (OpenAI-compatible LLM API)", open=True),
         inputs=None,
         outputs=[setup_zone],
+    )
+
+    # apply_quick_config
+    apply_cheap_btn.click(
+        fn=apply_quick_config,
+        inputs=[quick_config_cheapAI, cheap_base, cheap_key, cheap_model],
+        outputs=[cheap_base, cheap_key, cheap_model],
+    )
+
+    apply_strong_btn.click(
+        fn=apply_quick_config,
+        inputs=[quick_config_strongAI, strong_base, strong_key, strong_model],
+        outputs=[strong_base, strong_key, strong_model],
     )
 
     infer_btn.click(
