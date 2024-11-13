@@ -279,6 +279,9 @@ with gr.Blocks(
                 type="filepath",
             )
             infer_btn = gr.Button("Go!", variant="primary")
+            with gr.Row():
+                cancel_btn = gr.Button("Cancel", variant="secondary")
+                regen_pdf_btn = gr.Button("Re-generate PDF", variant="secondary")
             gr.Markdown("#### Like it? Give me a star ⭐ [on GitHub](https://github.com/cxumol/CoverPilot)!")
 
     is_same_cheap_strong.change(
@@ -320,7 +323,7 @@ with gr.Blocks(
         outputs=[setup_zone],
     )
 
-    infer_btn.click(
+    main_click_event = infer_btn.click(
         fn=set_same_cheap_strong,
         inputs=[
             is_same_cheap_strong,
@@ -380,6 +383,7 @@ with gr.Blocks(
         ],
         outputs=[debug_jobapp, cover_letter_pdf],
     )
+    cancel_btn.click(fn=None, inputs=None, outputs=None, cancels=[main_click_event])
 
 
 if __name__ == "__main__":
