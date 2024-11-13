@@ -384,6 +384,19 @@ with gr.Blocks(
         outputs=[debug_jobapp, cover_letter_pdf],
     )
     cancel_btn.click(fn=None, inputs=None, outputs=None, cancels=[main_click_event])
+    regen_pdf_btn.click(
+        fn=finalize_letter_pdf,
+        inputs=[
+            cheap_base,
+            cheap_key,
+            cheap_model,
+            jd_info,
+            cv_text,
+            cover_letter_text,
+            is_debug,
+        ],
+        outputs=[debug_jobapp, cover_letter_pdf],
+    )
 
 
 if __name__ == "__main__":
