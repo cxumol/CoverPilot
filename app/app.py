@@ -213,7 +213,7 @@ with gr.Blocks(
                 )
                 
                 with gr.Row():
-                    quick_config_cheapAI = gr.Textbox(label="Quick Config (JSON)")
+                    quick_config_cheapAI = gr.Textbox(label="Quick Config (JSON)",placeholder='{"base":"https://api.example.com/v1",\n"key":"sk-",\n"model":"gpt-123"}')
                     apply_cheap_btn = gr.Button("Apply Quick Config", variant="secondary")
 
                 with gr.Group():
@@ -230,7 +230,7 @@ with gr.Blocks(
                 )
 
                 with gr.Row():
-                    quick_config_strongAI = gr.Textbox(label="Quick Config (JSON)")
+                    quick_config_strongAI = gr.Textbox(label="Quick Config (JSON)",placeholder='{"base":"https://api.example.com/v1",\n"key":"sk-",\n"model":"gpt-456"}')
                     apply_strong_btn = gr.Button("Apply Quick Config", variant="secondary")
                     
                 with gr.Group():
