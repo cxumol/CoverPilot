@@ -103,3 +103,7 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 ## Motivation
 
 Please consider hiring me if you like this project. 
+
+## Sponsorship
+
+- [pending] Thank <https://github.com/glidea/one-balance> for LLM API credit
